@@ -1,9 +1,10 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
-import StoreProvider from '@/store/provider-store'
-import { ThemeWrapper } from '@/store/provider-theme'
+import StoreProvider from '@/common/store/provider-store'
+import { ThemeWrapper } from '@/common/store/provider-theme'
 import { lightTheme } from '@/styles/theme'
 import '../styles/global.sass'
+import Header from '@/components/Header/Header'
 
 export const metadata: Metadata = {
   // metadataBase: new URL(''),
@@ -27,7 +28,10 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <StoreProvider>
-          <ThemeWrapper theme={lightTheme}>{children}</ThemeWrapper>
+          <ThemeWrapper theme={lightTheme}>
+            <Header />
+            {children}
+          </ThemeWrapper>
         </StoreProvider>
       </body>
     </html>

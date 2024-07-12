@@ -84,6 +84,16 @@ const commonSettings: ThemeOptions = {
       textTransform: 'none',
       textDecoration: 'none'
     }
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: 'white',
+          color: 'white'
+        }
+      }
+    }
   }
 }
 
@@ -92,16 +102,24 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff'
+      light: '#64b5f6', // Light Blue 300
+      main: '#1976d2', // Blue 700
+      dark: '#0d47a1', // Blue 900
+      contrastText: '#ffffff'
     },
     secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000'
+      light: '#ff4081', // Pink A200
+      main: '#f50057', // Pink A400
+      dark: '#c51162', // Pink A700
+      contrastText: '#ffffff'
+    },
+    background: {
+      default: '#ffffff',
+      paper: '#f5f5f5'
+    },
+    text: {
+      primary: '#000000',
+      secondary: '#757575'
     }
   }
 })
@@ -111,16 +129,24 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      light: '#7986cb', // светлый оттенок синего
-      main: '#303f9f', // более насыщенный и темный синий
-      dark: '#1a237e', // очень темный синий, почти черный
-      contrastText: '#fff' // белый текст для контраста
+      light: '#484848', // Light grey for primary light
+      main: '#1c1c1c', // Main color
+      dark: '#000000', // Darker shade for primary dark
+      contrastText: '#ffffff' // White text for contrast
     },
     secondary: {
-      light: '#ff5131', // светлый оттенок красного
-      main: '#d50000', // насыщенный красный
-      dark: '#9b0000', // темный красный
-      contrastText: '#fff' // белый текст для контраста
+      light: '#484848', // Light grey for secondary light
+      main: '#1c1c1c', // Secondary color same as main color
+      dark: '#000000', // Darker shade for secondary dark
+      contrastText: '#ffffff' // White text for contrast
+    },
+    background: {
+      default: '#0d0d0d', // Main page background color
+      paper: '#1d1d1d' // Paper background color
+    },
+    text: {
+      primary: '#ffffff', // Primary text color
+      secondary: '#b0bec5' // Secondary text color
     }
   }
 })

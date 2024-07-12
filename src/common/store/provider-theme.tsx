@@ -1,6 +1,6 @@
 'use client'
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { useAppSelector } from '@/store/hooks'
+import { useAppSelector } from './hooks'
 import { ThemeProvider } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import { darkTheme, lightTheme } from '@/styles/theme'
