@@ -8,7 +8,7 @@ const NotFoundPage = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(-45deg,  #757ce8, #ff7961)',
+        background: '#484848',
         position: 'fixed',
         left: 0,
         top: 0,
@@ -19,7 +19,7 @@ const NotFoundPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        color: '#000',
+        color: 'text.primary',
         direction: 'rtl'
       }}
     >
@@ -53,7 +53,7 @@ const NotFoundPage = () => {
             padding: '10px 15px',
             borderRadius: '500px',
             border: '2px solid #232323',
-            boxShadow: '0 20px 70px 4px rgba(0, 0, 0, 0.1), inset 0px 20px 0 0px #757ce8',
+            boxShadow: '0 20px 70px 4px rgba(0, 0, 0, 0.1), inset 0px 20px 0 0px #1d1d1d',
             fontWeight: 900,
             transition: 'all 300ms ease',
             '&:hover': {

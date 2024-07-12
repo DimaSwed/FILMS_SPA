@@ -1,18 +1,25 @@
+'use client'
 import { FC } from 'react'
 import { List, ListItem, ListItemIcon, ListItemText, Avatar, Divider, Box } from '@mui/material'
 import { Movie, Tv, Search, NewReleases, Info, PlaylistPlay } from '@mui/icons-material'
 import SubscriptionInfo from './SubscriptionInfo'
 import SidebarItem from './SidebarItem'
+import { useRouter } from 'next/navigation'
 
 const Sidebar: FC = () => {
+  const router = useRouter()
+
   return (
     <Box
       style={{
-        width: '280px',
-        backgroundColor: '#1c1c1c',
+        position: 'sticky',
+        maxWidth: '280px',
+        width: '100%',
+        backgroundColor: 'primary.main',
         color: '#fff',
-        height: '100vh',
+        minHeight: '100vh',
         padding: '10px'
+        // border: '1px solid yellow'
       }}
     >
       <SubscriptionInfo />
@@ -21,7 +28,7 @@ const Sidebar: FC = () => {
 
       <List component="nav">
         <SidebarItem primary="Ваши данные">
-          <ListItem button sx={{ pl: 4 }}>
+          <ListItem onClick={() => router.push('/profile')} button sx={{ pl: 4 }}>
             <ListItemIcon>
               <Avatar />
             </ListItemIcon>
