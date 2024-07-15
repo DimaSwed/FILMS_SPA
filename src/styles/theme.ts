@@ -111,15 +111,15 @@ const lightTheme = createTheme({
       light: '#ff4081', // Pink A200
       main: '#f50057', // Pink A400
       dark: '#c51162', // Pink A700
-      contrastText: '#ffffff'
+      contrastText: '#000000'
     },
     background: {
       default: '#ffffff',
       paper: '#f5f5f5'
     },
     text: {
-      primary: '#000000',
-      secondary: '#757575'
+      primary: '#ffffff',
+      secondary: '#000000'
     }
   }
 })
@@ -146,7 +146,7 @@ const darkTheme = createTheme({
     },
     text: {
       primary: '#ffffff', // Primary text color
-      secondary: '#b0bec5' // Secondary text color
+      secondary: '#000000' // Secondary text color
     }
   }
 })

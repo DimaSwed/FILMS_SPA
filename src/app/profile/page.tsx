@@ -6,7 +6,12 @@ import { Box, Typography, Avatar, Stack, Divider } from '@mui/material'
 const UserProfile: FC = () => {
   return (
     <Stack
-      sx={{ padding: '30px', color: 'text.primary', bgcolor: 'background.default', width: '100%' }}
+      sx={{
+        padding: '30px',
+        color: 'secondary.contrastText',
+        bgcolor: 'background.paper',
+        width: '100%'
+      }}
     >
       <Box sx={{ textAlign: 'center', mb: 4 }}>
         <Avatar
@@ -15,10 +20,10 @@ const UserProfile: FC = () => {
           sx={{ width: 100, height: 100, mx: 'auto', mb: 2 }}
         />
         <Typography variant="h4">Dima SWED</Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           @dimaswed
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="secondary.contrastText">
           0 Подписчиков • 0 Подписок
         </Typography>
       </Box>
@@ -29,7 +34,7 @@ const UserProfile: FC = () => {
         <Typography variant="h5" gutterBottom>
           История
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           Добавьте несколько телешоу и фильмов в историю просмотров, и они появятся здесь.
         </Typography>
       </Box>
@@ -40,7 +45,7 @@ const UserProfile: FC = () => {
         <Typography variant="h5" gutterBottom>
           Избранные
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           У вас пока нет избранных.
         </Typography>
       </Box>
@@ -51,7 +56,7 @@ const UserProfile: FC = () => {
         <Typography variant="h5" gutterBottom>
           Рейтинги
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           Вы еще ничего не оценили.
         </Typography>
       </Box>
@@ -62,7 +67,7 @@ const UserProfile: FC = () => {
         <Typography variant="h5" gutterBottom>
           Просмотренные фильмы
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           Вы еще не смотрели ни одного фильма.
         </Typography>
       </Box>
@@ -73,7 +78,7 @@ const UserProfile: FC = () => {
         <Typography variant="h5" gutterBottom>
           Просмотренные сериалы
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="secondary.contrastText">
           Вы еще не смотрели ни одного сериала.
         </Typography>
       </Box>

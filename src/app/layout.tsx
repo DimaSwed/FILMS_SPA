@@ -33,8 +33,8 @@ export default function RootLayout({
           <ThemeWrapper theme={lightTheme}>
             <Header />
             <Box sx={{ display: 'flex' }}>
-              <Sidebar />
               {children}
+              <Sidebar />
             </Box>
           </ThemeWrapper>
         </StoreProvider>

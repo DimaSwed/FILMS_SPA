@@ -3,6 +3,7 @@ import React from 'react'
 import { SettingsButton } from '../UI/SettingsButton'
 import Link from 'next/link'
 import Image from 'next/image'
+import ChangeThemeButton from '../UI/ChangeThemeButton'
 
 const Header = () => {
   return (
@@ -23,6 +24,7 @@ const Header = () => {
         }}
       >
         <Box
+          component={'div'}
           sx={{
             display: 'flex',
             gap: 2,
@@ -32,7 +34,7 @@ const Header = () => {
             width: '100%'
           }}
         >
-          <Box>
+          <Box component={'div'}>
             <Link
               href="/"
               passHref
@@ -51,14 +53,20 @@ const Header = () => {
             </Link>
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box component={'div'} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <ChangeThemeButton />
+          </Box>
+
+          <Box component={'div'} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Link href="/login" passHref>
               <Button sx={{ color: 'primary.contrastText' }}>Войти</Button>
             </Link>
             <Link href="/register" passHref>
               <Button sx={{ color: 'primary.contrastText' }}>Регистрация</Button>
             </Link>
-            <SettingsButton />
+            <Link href="/settings" passHref>
+              <SettingsButton />
+            </Link>
           </Box>
         </Box>
       </AppBar>

@@ -13,6 +13,7 @@ const ErrorWrapper: FC<{ error: Error }> = ({ error }) => {
         justifyContent: 'center',
         gap: 5,
         minHeight: '100vh',
+        width: '100%',
         color: 'white'
       }}
     >

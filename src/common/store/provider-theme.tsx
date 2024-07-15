@@ -26,7 +26,7 @@ export const ThemeWrapper: FC<ProviderThemeProps> = ({ children, theme }) => {
     }
   }, [currentTheme, selectedTheme, mount, theme])
 
-  const newSelectedTheme = selectedTheme === 'lightTheme' ? lightTheme : darkTheme
+  const newSelectedTheme = selectedTheme === 'light' ? lightTheme : darkTheme
 
   return (
     <ThemeProvider theme={newSelectedTheme}>
