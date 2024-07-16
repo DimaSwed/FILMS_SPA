@@ -1,11 +1,11 @@
+import React, { FC } from 'react'
 import { AppBar, Box, Button, CssBaseline, Stack, Toolbar, Typography } from '@mui/material'
-import React from 'react'
 import { SettingsButton } from '../UI/SettingsButton'
 import Link from 'next/link'
 import Image from 'next/image'
 import ChangeThemeButton from '../UI/ChangeThemeButton'
 
-const Header = () => {
+const Header: FC = () => {
   return (
     <Stack direction="row">
       <CssBaseline />
@@ -14,7 +14,7 @@ const Header = () => {
         sx={{
           backgroundColor: 'primary.main',
           backgroundImage: 'none',
-          padding: '15px 30px 15px 30px', // Убедиться, что здесь нет необходимости в дополнительной высоте
+          padding: '15px 30px 15px 30px',
           display: 'flex',
           gap: 2,
           alignItems: 'center',

@@ -42,7 +42,7 @@ const Sidebar: FC = () => {
         </SidebarItem>
 
         <SidebarItem primary="Просмотр">
-          <ListItem button sx={{ pl: 4 }}>
+          <ListItem onClick={() => router.push('/films')} button sx={{ pl: 4 }}>
             <ListItemIcon>
               <Movie sx={{ color: 'text.primary' }} />
             </ListItemIcon>

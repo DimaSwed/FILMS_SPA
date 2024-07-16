@@ -1,7 +1,7 @@
 'use client'
 
 import { FC, useState } from 'react'
-import { ListItem, ListItemIcon, ListItemText, Collapse, List } from '@mui/material'
+import { ListItem, ListItemText, Collapse, List } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 
 interface SidebarItemProps {

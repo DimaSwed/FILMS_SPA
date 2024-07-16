@@ -23,6 +23,10 @@ const UserProfile: FC = () => {
         <Typography variant="body1" color="secondary.contrastText">
           @dimaswed
         </Typography>
+        <Typography variant="body2">swed88@mail.ru</Typography>
+        <Typography variant="body2" mb={1}>
+          Авторизация с помощью :
+        </Typography>
         <Typography variant="body2" color="secondary.contrastText">
           0 Подписчиков • 0 Подписок
         </Typography>

@@ -7,17 +7,18 @@ import Header from '@/components/Header/Header'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import { Box } from '@mui/material'
 import '../styles/global.sass'
+import Cookies from 'js-cookie'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://films-spa-dimas-projects-c1a0dfa7.vercel.app/'),
-  icons: '/public/images/logo_main.png',
+  metadataBase: new URL('https://films-spa-dimas-projects-c1a0dfa7.vercel.app'),
+  icons: '/public/logomain.jpg',
   title: 'Films App',
   description: 'My films unwatched list App',
   openGraph: {
     title: 'Films App',
     description: 'My films unwatched list App',
-    url: 'https://films-spa-dimas-projects-c1a0dfa7.vercel.app/',
-    images: ['/public/images/logo_main.png']
+    url: 'https://films-spa-dimas-projects-c1a0dfa7.vercel.app',
+    images: ['/public/logomain.jpg']
   }
 }
 
@@ -26,11 +27,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const initialTheme = Cookies.get('theme') || 'light'
+
   return (
     <html lang="ru">
       <body>
         <StoreProvider>
-          <ThemeWrapper theme={lightTheme}>
+          {/* <ThemeWrapper theme={lightTheme}> */}
+          <ThemeWrapper theme={initialTheme}>
             <Header />
             <Box sx={{ display: 'flex' }}>
               {children}

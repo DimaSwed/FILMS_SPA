@@ -1,13 +1,17 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import themeAppReducer from './slices/slice-theme'
+import { moviesApi } from '../services/moviesApi'
 
 const rootReducer = combineReducers({
-  theme: themeAppReducer
+  theme: themeAppReducer,
+  [moviesApi.reducerPath]: moviesApi.reducer
 })
 
 export const makeStore = () => {
   return configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
+    // Добавляем moviesApi middleware
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(moviesApi.middleware)
   })
 }
 
