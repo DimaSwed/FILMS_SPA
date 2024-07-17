@@ -7,7 +7,7 @@ const UserProfile: FC = () => {
   return (
     <Stack
       sx={{
-        padding: '30px',
+        padding: { xs: '10px', sm: '15px', md: '30px' },
         color: 'secondary.contrastText',
         bgcolor: 'background.paper',
         width: '100%'

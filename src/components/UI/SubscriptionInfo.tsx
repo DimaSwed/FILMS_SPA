@@ -12,7 +12,14 @@ const SubscriptionInfo: FC = () => {
         color: 'text.primary'
       }}
     >
-      <Image src={logo} alt="logo" width="90" height="95" style={{ margin: '0 auto 10px auto' }} />
+      <Image
+        src={logo}
+        alt="logo"
+        width="90"
+        height="95"
+        priority
+        style={{ margin: '0 auto 10px auto' }}
+      />
       <Typography variant="body1">@dimaswed</Typography>
       <Typography variant="body2" mb={1}>
         swed88@mail.ru

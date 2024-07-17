@@ -9,7 +9,26 @@ const nextConfig = {
     includePaths: [path.join(__dirname, 'styles')]
   },
   images: {
-    domains: ['image.openmoviedb.com']
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.kinopoisk.dev',
+        port: '',
+        pathname: '/v1.4/movie/**'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'films-spa-dimas-projects-c1a0dfa7.vercel.app',
+        port: '',
+        pathname: '/logomain.jpg'
+      }
+    ]
   }
 }
 

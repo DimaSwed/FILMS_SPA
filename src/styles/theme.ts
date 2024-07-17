@@ -9,7 +9,7 @@ const roboto = Roboto({
 })
 
 const commonSettings: ThemeOptions = {
-  breakpoints: { values: { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1440 } },
+  breakpoints: { values: { xs: 320, sm: 600, md: 900, lg: 1200, xl: 1440 } },
   typography: {
     fontFamily: roboto.style.fontFamily,
     h1: {

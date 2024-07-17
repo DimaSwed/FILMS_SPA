@@ -112,7 +112,12 @@ const ChangeThemeButton: FC = () => {
         >
           {darkTheme ? <LightModeIcon /> : <DarkModeIcon />}
         </ListItemIcon>
-        <ListItemText color="text.primary">
+        <ListItemText
+          color="text.primary"
+          sx={{
+            display: { xs: 'none', sm: 'none', md: 'block' }
+          }}
+        >
           {darkTheme ? 'Светлая тема' : 'Темная тема'}
         </ListItemText>
       </ListItemButton>

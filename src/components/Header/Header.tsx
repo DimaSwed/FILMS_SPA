@@ -14,7 +14,7 @@ const Header: FC = () => {
         sx={{
           backgroundColor: 'primary.main',
           backgroundImage: 'none',
-          padding: '15px 30px 15px 30px',
+          padding: { xs: '15px', md: '15px 30px', lg: '15px 30px' },
           display: 'flex',
           gap: 2,
           alignItems: 'center',
@@ -57,17 +57,28 @@ const Header: FC = () => {
             <ChangeThemeButton />
           </Box>
 
-          <Box component={'div'} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Link href="/login" passHref>
-              <Button sx={{ color: 'primary.contrastText' }}>Войти</Button>
-            </Link>
-            <Link href="/register" passHref>
-              <Button sx={{ color: 'primary.contrastText' }}>Регистрация</Button>
-            </Link>
-            <Link href="/settings" passHref>
-              <SettingsButton />
-            </Link>
+          <Box
+            component={'div'}
+            sx={{ display: { xs: 'none', sm: 'flex' }, gap: 3, alignItems: 'center' }}
+          >
+            <Stack
+              sx={{
+                flexDirection: 'row',
+                display: { xs: 'none', sm: 'flex' }
+                // border: '1px solid red'
+              }}
+            >
+              <Link href="/login" passHref>
+                <Button sx={{ color: 'primary.contrastText' }}>Войти</Button>
+              </Link>
+              <Link href="/register" passHref>
+                <Button sx={{ color: 'primary.contrastText' }}>Регистрация</Button>
+              </Link>
+            </Stack>
           </Box>
+          <Link href="/settings" passHref>
+            <SettingsButton />
+          </Link>
         </Box>
       </AppBar>
     </Stack>
