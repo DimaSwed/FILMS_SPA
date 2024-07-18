@@ -63,7 +63,7 @@ const commonSettings: ThemeOptions = {
       transition: 'font-size 2s ease',
       '@media (max-width:1200px)': { fontSize: '25px' },
       '@media (max-width:900px)': { fontSize: '20px' },
-      '@media (max-width:600px)': { fontSize: '16px' },
+      '@media (max-width:600px)': { fontSize: '18px' },
       fontWeight: 400,
       fontStyle: 'normal',
       lineHeight: '130%',

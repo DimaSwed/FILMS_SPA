@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import themeAppReducer from './slices/slice-theme'
-import { moviesApi } from '../services/moviesApi'
+// import { moviesApi } from '../services/moviesApiKinopoisk'
+import { moviesApi } from '../services/moviesApiTMDB'
 
 const rootReducer = combineReducers({
   theme: themeAppReducer,

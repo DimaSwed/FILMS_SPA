@@ -7,58 +7,117 @@ import { ViewDay } from '@mui/icons-material'
 import {
   Typography,
   Box,
-  Grid,
   Card,
   CardMedia,
   CardContent,
   CardActionArea,
   Button
 } from '@mui/material'
-import {
-  useFetchMoviesByFiltersQuery
-  // useFetchRandomMovieWithFiltersQuery,
-  // useSearchMoviesQuery
-} from '@/common/services/moviesApi'
+import { useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import Slider from 'react-slick'
 
 export default function Home() {
-  // Используем хук для получения случайного фильма с фильтрами
-  // const { data: randomMovie, isLoading: isLoadingRandomMovie } =
-  //   useFetchRandomMovieWithFiltersQuery({})
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 7,
+    slidesToScroll: 2,
+    draggable: true,
+    responsive: [
+      {
+        breakpoint: 1440,
+        settings: {
+          slidesToShow: 6,
+          slidesToScroll: 3
+        }
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 3
+        }
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 400,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      }
+    ]
+  }
 
-  // Запрашиваем фильмы с фильтром, чтобы показать тренды и популярные фильмы
+  const today = new Date()
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+    .toISOString()
+    .split('T')[0]
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    .toISOString()
+    .split('T')[0]
+
   const { data: trendingMovies, isLoading: isLoadingTrendingMovies } = useFetchMoviesByFiltersQuery(
     {
-      sort: 'popularity.desc',
-      page: 1,
-      limit: 10
+      sort_by: 'popularity.desc',
+      'primary_release_date.gte': startOfMonth,
+      'primary_release_date.lte': endOfMonth,
+      with_original_language: 'ru',
+      page: 1
     }
   )
 
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useFetchMoviesByFiltersQuery({
-    sort: 'popularity.desc',
+    sort_by: 'popularity.desc',
     page: 1,
-    limit: 5
+    with_original_language: 'ru'
   })
 
   const { data: topInRussiaMovies, isLoading: isLoadingTopInRussiaMovies } =
     useFetchMoviesByFiltersQuery({
-      sort: 'rating.kp.desc',
-      page: 1,
-      limit: 5
+      sort_by: 'vote_average.desc',
+      'primary_release_date.gte': startOfMonth,
+      'primary_release_date.lte': endOfMonth,
+      region: 'RU',
+      with_original_language: 'ru',
+      page: 1
     })
 
   const { data: expectedMovies, isLoading: isLoadingExpectedMovies } = useFetchMoviesByFiltersQuery(
     {
-      sort: 'year.asc',
-      page: 1,
-      limit: 5
+      sort_by: 'release_date.desc',
+      'release_date.gte': startOfMonth,
+      'release_date.lte': endOfMonth,
+      page: 1
     }
   )
 
   const { data: bestMovies, isLoading: isLoadingBestMovies } = useFetchMoviesByFiltersQuery({
-    sort: 'rating.kp.desc',
-    page: 1,
-    limit: 5
+    sort_by: 'vote_average.desc',
+    'primary_release_date.gte': startOfMonth,
+    'primary_release_date.lte': endOfMonth,
+    region: 'RU',
+    with_original_language: 'ru',
+    page: 1
   })
 
   if (
@@ -67,7 +126,6 @@ export default function Home() {
     isLoadingTopInRussiaMovies ||
     isLoadingExpectedMovies ||
     isLoadingBestMovies
-    // isLoadingRandomMovie
   ) {
     return (
       <Typography component={'p'} width={'100%'}>
@@ -77,11 +135,11 @@ export default function Home() {
   }
 
   const categories = [
-    { title: 'В тренде', movies: trendingMovies || [] },
-    { title: 'Популярные', movies: popularMovies || [] },
-    { title: 'Топ 10 в России', movies: topInRussiaMovies || [] },
-    { title: 'Ожидаемые', movies: expectedMovies || [] },
-    { title: 'Лучшие', movies: bestMovies || [] }
+    { title: 'В тренде в этом месяце', movies: trendingMovies || [] },
+    { title: 'Популярные в этом месяце', movies: popularMovies || [] },
+    { title: 'Топ 10 в России в этом месяце', movies: topInRussiaMovies || [] },
+    { title: 'Самые ожидаемые премьеры в прокате и онлайн', movies: expectedMovies || [] },
+    { title: 'Лучшие фильмы', movies: bestMovies || [] }
   ]
 
   return (
@@ -92,86 +150,60 @@ export default function Home() {
       </Head>
       <Box
         component="main"
-        // bgcolor={'primary.main'}
         minHeight={'100%'}
         sx={{
           padding: { xs: '10px', sm: '15px', md: '30px' },
           color: 'secondary.contrastText',
           bgcolor: 'background.paper',
-          width: '100%'
+          width: '100%',
+          overflow: 'hidden' // ensure no overflow
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h3" gutterBottom textAlign={'center'} mb={5}>
           Фильмы
         </Typography>
 
-        {/* Отображаем случайный фильм */}
-        {/* {randomMovie && (
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h5" mb={2}>
-              Случайный фильм
-            </Typography>
-            <Card sx={{ height: '300px', width: '200px' }}>
-              <CardActionArea>
-                {randomMovie.image ? (
-                  <CardMedia
-                    component="img"
-                    image={randomMovie.image}
-                    alt={randomMovie.title}
-                    sx={{
-                      color: 'secondary.contrastText',
-                      width: '100%',
-                      height: '200px'
-                    }}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '200px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <ViewDay
-                      sx={{
-                        width: '80px',
-                        height: '80px',
-                        margin: '0 auto',
-                        color: 'grey'
-                      }}
-                    />
-                  </Box>
-                )}
-              </CardActionArea>
-              <CardContent>
-                <Typography variant="body2" color="secondary.contrastText" component="p">
-                  {randomMovie.title}
-                </Typography>
-                <Rating name="read-only" value={randomMovie.rating / 2} readOnly precision={0.1} />
-              </CardContent>
-            </Card>
-          </Box>
-        )} */}
-
         {categories.map(({ title, movies }) => (
           <Box key={title} sx={{ mb: 4 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-              <Typography variant="h5">{title}</Typography>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ flexDirection: { xs: 'column', sm: 'row' }, padding: '0 10px' }}
+              mb={2}
+            >
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                {title}
+              </Typography>
               <Link href={`/${title.toLowerCase().replace(/\s+/g, '-')}`}>
                 <Button variant="contained">Просмотреть все</Button>
               </Link>
             </Box>
 
-            <Grid container spacing={0}>
+            <Slider {...settings}>
               {movies.map((movie) => (
-                <Grid item xs={12} sm={5} md={4} lg={2} key={movie.id}>
+                <Box
+                  key={movie.id}
+                  sx={{
+                    padding: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.05)'
+                    }
+                  }}
+                >
                   <Card
                     sx={{
                       height: '225px',
                       width: '150px',
-                      borderRadius: '10px'
+                      borderRadius: '10px',
+                      position: 'relative',
+                      textAlign: 'center',
+                      margin: { xs: '0 auto', sm: '0' }
                     }}
                   >
                     <CardActionArea>
@@ -183,7 +215,8 @@ export default function Home() {
                           sx={{
                             color: 'secondary.contrastText',
                             width: '100%',
-                            height: '225px'
+                            height: '225px',
+                            margin: '0 auto'
                           }}
                         />
                       ) : (
@@ -222,7 +255,16 @@ export default function Home() {
                       </Box>
                     </CardActionArea>
                   </Card>
-                  <CardContent sx={{ padding: '0px', maxWidth: '150px' }}>
+                  <CardContent
+                    sx={{
+                      padding: '0px',
+                      maxWidth: { xs: 'auto', sm: '150px' },
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                      // textAlign: { xs: 'center', sm: 'start' }
+                    }}
+                  >
                     <Typography
                       variant="body2"
                       color="secondary.contrastText"
@@ -234,7 +276,8 @@ export default function Home() {
                         WebkitBoxOrient: 'vertical',
                         WebkitLineClamp: 2,
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
+                        textAlign: 'center'
                       }}
                     >
                       {movie.title}
@@ -242,10 +285,16 @@ export default function Home() {
                     <Typography variant="body2" color="secondary.contrastText" component="p">
                       {movie.year}
                     </Typography>
+
+                    <Link href={`/movies/${movie.id}`}>
+                      <Button variant="contained" size="small">
+                        Подробнее
+                      </Button>
+                    </Link>
                   </CardContent>
-                </Grid>
+                </Box>
               ))}
-            </Grid>
+            </Slider>
           </Box>
         ))}
       </Box>

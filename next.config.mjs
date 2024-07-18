@@ -17,6 +17,12 @@ const nextConfig = {
         pathname: '/v1.4/movie/**'
       },
       {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+        port: '',
+        pathname: '/t/p/**'
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         port: '',
