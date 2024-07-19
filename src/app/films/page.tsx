@@ -1,318 +1,190 @@
 'use client'
 
-// import {
-//   Typography,
-//   Box,
-//   Grid,
-//   Card,
-//   CardMedia,
-//   CardContent,
-//   CardActionArea,
-//   Stack,
-//   Rating
-// } from '@mui/material'
-// import { useState, useEffect } from 'react'
-// import {
-//   fetchMovies,
-//   fetchTopInRussia,
-//   fetchPopularMovies,
-//   fetchExpectedMovies,
-//   fetchBestMovies
-// } from '@/common/services/moviesService'
-// import { Movie, MoviesResponse } from '@/common/types/types'
-// import { ViewDay } from '@mui/icons-material'
+import Head from 'next/head'
+import Link from 'next/link'
+import { Typography, Box, Button, CircularProgress } from '@mui/material'
+import { useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import Slider from 'react-slick'
+import MovieCard from '@/components/Films/MovieCard'
 
 export default function Films() {
-  // const [movies, setMovies] = useState<MoviesResponse>({
-  //   trending: [],
-  //   forYou: [],
-  //   mostFavorited: []
-  // })
-  // const [topInRussia, setTopInRussia] = useState<Movie[]>([])
-  // const [popular, setPopular] = useState<Movie[]>([])
-  // const [expected, setExpected] = useState<Movie[]>([])
-  // const [best, setBest] = useState<Movie[]>([])
-  // useEffect(() => {
-  //   const loadMovies = async () => {
-  //     const data = await fetchMovies()
-  //     setMovies(data)
-  //     setTopInRussia(await fetchTopInRussia())
-  //     setPopular(await fetchPopularMovies())
-  //     setExpected(await fetchExpectedMovies())
-  //     setBest(await fetchBestMovies())
-  //   }
-  //   loadMovies()
-  // }, [])
-  // const categories = [
-  //   { title: 'В тренде', movies: movies.trending },
-  //   { title: 'Топ 10 в России', movies: topInRussia },
-  //   { title: 'Популярные', movies: popular },
-  //   { title: 'Ожидаемые', movies: expected },
-  //   { title: 'Лучшие', movies: best }
-  // ]
-  // return (
-  //   <Stack
-  //     sx={{
-  //       padding: '30px',
-  //       color: 'secondary.contrastText',
-  //       bgcolor: 'background.paper',
-  //       width: '100%'
-  //     }}
-  //   >
-  //     <Typography variant="h4" gutterBottom>
-  //       Фильмы
-  //     </Typography>
-  //     {categories.map(({ title, movies }) => (
-  //       <Box key={title} sx={{ mb: 4 }}>
-  //         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-  //           <Typography variant="h5">{title}</Typography>
-  //           <Typography variant="body2" sx={{ cursor: 'pointer' }}>
-  //             Просмотреть все
-  //           </Typography>
-  //         </Box>
-  //         <Grid container spacing={20}>
-  //           {movies.map((movie, index) => (
-  //             <Grid item xs={7} sm={5} md={4} lg={1} key={`${movie.title}_${index}`}>
-  //               <Card sx={{ height: '225px', width: '150px' }}>
-  //                 <CardActionArea>
-  //                   {movie.image ? (
-  //                     <CardMedia
-  //                       component="img"
-  //                       image={movie.image}
-  //                       alt={movie.title}
-  //                       sx={{
-  //                         color: 'secondary.contrastText',
-  //                         width: '100%',
-  //                         height: '250px'
-  //                       }}
-  //                     />
-  //                   ) : (
-  //                     <Box
-  //                       sx={{
-  //                         width: '100%',
-  //                         height: '250px',
-  //                         display: 'flex',
-  //                         alignItems: 'center',
-  //                         justifyContent: 'center'
-  //                       }}
-  //                     >
-  //                       <ViewDay
-  //                         sx={{
-  //                           width: '80px',
-  //                           height: '80px',
-  //                           margin: '0 auto',
-  //                           color: 'grey'
-  //                         }}
-  //                       />
-  //                     </Box>
-  //                   )}
-  //                 </CardActionArea>
-  //                 <CardContent>
-  //                   <Typography variant="body2" color="secondary.contrastText" component="p">
-  //                     {movie.title}
-  //                   </Typography>
-  //                   <Rating name="read-only" value={movie.rating / 2} readOnly precision={0.1} />
-  //                 </CardContent>
-  //               </Card>
-  //             </Grid>
-  //           ))}
-  //         </Grid>
-  //       </Box>
-  //     ))}
-  //   </Stack>
-  // )
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 7,
+    slidesToScroll: 2,
+    draggable: true,
+    responsive: [
+      {
+        breakpoint: 1440,
+        settings: {
+          slidesToShow: 6,
+          slidesToScroll: 3
+        }
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 3
+        }
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 400,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false
+        }
+      }
+    ]
+  }
+
+  const today = new Date()
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+    .toISOString()
+    .split('T')[0]
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    .toISOString()
+    .split('T')[0]
+
+  const { data: genreMovies, isLoading: isLoadinggenreMovies } = useFetchMoviesByFiltersQuery({
+    sort_by: 'vote_average.desc',
+    'primary_release_date.gte': startOfMonth,
+    'primary_release_date.lte': endOfMonth,
+    region: 'RU',
+    with_original_language: 'ru',
+    page: 1
+  })
+
+  if (isLoadinggenreMovies) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        sx={{
+          color: 'secondary.contrastText',
+          bgcolor: 'background.paper',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <CircularProgress sx={{ color: 'secondary.contrastText' }} />
+      </Box>
+    )
+  }
+
+  // Создаем карту жанров
+  const genreMap: { [key: number]: string } = {
+    28: 'Боевик',
+    12: 'Приключения',
+    16: 'Анимация',
+    35: 'Комедия',
+    80: 'Криминал',
+    18: 'Драма',
+    10751: 'Семейный',
+    14: 'Фэнтези',
+    36: 'Исторический',
+    27: 'Ужасы',
+    10402: 'Музыка',
+    9648: 'Детектив',
+    10749: 'Романтика',
+    878: 'Научная фантастика',
+    10770: 'ТВ шоу',
+    53: 'Триллер',
+    10752: 'Военный',
+    37: 'Вестерн'
+  }
+
+  const categories = [
+    { title: 'Боевики', movies: genreMovies || [] },
+    { title: 'Приключения', movies: genreMovies || [] },
+    { title: 'Комедии', movies: genreMovies || [] },
+    { title: 'Ужасы', movies: genreMovies || [] },
+    { title: 'Криминал', movies: genreMovies || [] },
+    { title: 'Анимация', movies: genreMovies || [] },
+    { title: 'Драма', movies: genreMovies || [] },
+    { title: 'Семейные', movies: genreMovies || [] },
+    { title: 'Фэнтези', movies: genreMovies || [] },
+    { title: 'Исторические', movies: genreMovies || [] },
+    { title: 'Детективы', movies: genreMovies || [] },
+    { title: 'Романтические', movies: genreMovies || [] },
+    { title: 'Фантастика', movies: genreMovies || [] },
+    { title: 'Триллеры', movies: genreMovies || [] },
+    { title: 'Военные', movies: genreMovies || [] },
+    { title: 'Вестерны', movies: genreMovies || [] },
+    { title: 'ТВ Шоу', movies: genreMovies || [] },
+    { title: 'Мьюзикл', movies: genreMovies || [] }
+  ]
+
+  return (
+    <>
+      <Head>
+        <Link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/logomain.jpg" />
+      </Head>
+      <Box
+        component="main"
+        minHeight={'100%'}
+        sx={{
+          padding: { xs: '10px', sm: '15px', md: '30px' },
+          color: 'secondary.contrastText',
+          bgcolor: 'background.paper',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Typography variant="h3" gutterBottom textAlign={'center'} mb={5}>
+          Фильмы
+        </Typography>
+
+        {categories.map(({ title, movies }) => (
+          <Box key={title} sx={{ mb: 4 }}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ flexDirection: { xs: 'column', sm: 'row' }, padding: '0 10px' }}
+              mb={2}
+            >
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                {title}
+              </Typography>
+
+              <Link href={`/${title.toLowerCase().replace(/\s+/g, '-')}`}>
+                <Button variant="contained">Просмотреть все</Button>
+              </Link>
+            </Box>
+
+            <Slider {...settings}>
+              {movies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </Slider>
+          </Box>
+        ))}
+      </Box>
+    </>
+  )
 }
-
-// 'use client'
-
-// import { ViewDay } from '@mui/icons-material'
-// import {
-//   Typography,
-//   Box,
-//   Grid,
-//   Card,
-//   CardMedia,
-//   CardContent,
-//   CardActionArea,
-//   Stack
-// } from '@mui/material'
-// import { useState, useEffect } from 'react'
-// import axios from 'axios'
-
-// interface Movie {
-//   title: string
-//   rating: number
-//   watchers?: number
-//   forYou?: string
-//   image: string
-// }
-
-// const fetchMovies = async (): Promise<{
-//   trending: Movie[]
-//   forYou: Movie[]
-//   mostFavorited: Movie[]
-// }> => {
-//   const API = process.env.NEXT_PUBLIC_KINOPOISK_API_KEY
-//   const url = 'https://api.kinopoisk.dev/v1.4/movie'
-
-//   // Пример запроса для получения трендовых фильмов
-//   const trendingResponse = await axios.get(url, {
-//     headers: {
-//       'X-API-KEY': API
-//     },
-//     params: {
-//       rating: '7-10',
-//       limit: 10
-//     }
-//   })
-
-//   // Пример запроса для получения фильмов "for you"
-//   const forYouResponse = await axios.get(url, {
-//     headers: {
-//       'X-API-KEY': API
-//     },
-//     params: {
-//       year: '2023',
-//       limit: 10
-//     }
-//   })
-
-//   // Пример запроса для получения самых популярных фильмов
-//   const mostFavoritedResponse = await axios.get(url, {
-//     headers: {
-//       'X-API-KEY': API
-//     },
-//     params: {
-//       limit: 15
-//     }
-//   })
-
-//   // Преобразование данных для соответствия интерфейсу Movie
-//   const trending = trendingResponse.data.docs.map((movie: any) => ({
-//     title: movie.name,
-//     rating: movie.rating.kp,
-//     watchers: movie.watchers,
-//     image: movie?.poster?.url
-//   }))
-
-//   // console.log(trending)
-
-//   const forYou = forYouResponse.data.docs.map((movie: any) => ({
-//     title: movie.name,
-//     rating: movie.rating.kp,
-//     forYou: movie?.boxOffice?.total?.amount,
-//     image: movie?.poster?.url
-//   }))
-
-//   const mostFavorited = mostFavoritedResponse.data.docs.map((movie: any) => ({
-//     title: movie.name,
-//     rating: movie.rating.kp,
-//     image: movie?.poster?.url
-//   }))
-
-//   return { trending, forYou, mostFavorited }
-// }
-
-// export default function Films() {
-//   const [movies, setMovies] = useState<{
-//     trending: Movie[]
-//     forYou: Movie[]
-//     mostFavorited: Movie[]
-//   }>({
-//     trending: [],
-//     forYou: [],
-//     mostFavorited: []
-//   })
-
-//   useEffect(() => {
-//     const loadMovies = async () => {
-//       const data = await fetchMovies()
-//       setMovies(data)
-//     }
-//     loadMovies()
-//   }, [])
-
-//   return (
-//     <Stack
-//       sx={{
-//         padding: '30px',
-//         color: 'secondary.contrastText',
-//         bgcolor: 'background.paper',
-//         width: '100%'
-//       }}
-//     >
-//       <Typography variant="h4" gutterBottom>
-//         Фильмы
-//       </Typography>
-//       {Object.entries(movies).map(([category, movieList]) => (
-//         <Box key={category} sx={{ mb: 4 }}>
-//           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-//             <Typography variant="h5">{category.replace(/([A-Z])/g, ' $1').trim()}</Typography>
-//             <Typography variant="body2" sx={{ cursor: 'pointer' }}>
-//               Просмотреть все
-//             </Typography>
-//           </Box>
-//           <Grid container spacing={20}>
-//             {movieList.slice(1).map((movie, index) => (
-//               <Grid item xs={7} sm={5} md={4} lg={1} key={`${movie.title}_${index}`}>
-//                 <Card sx={{ height: '225px', width: '150px' }}>
-//                   <CardActionArea>
-//                     {movie.image ? (
-//                       <CardMedia
-//                         component="img"
-//                         image={movie.image}
-//                         alt={movie.title}
-//                         sx={{
-//                           color: 'secondary.contrastText',
-//                           width: '100%',
-//                           height: '250px'
-//                         }}
-//                       />
-//                     ) : (
-//                       <Box
-//                         sx={{
-//                           width: '100%',
-//                           height: '250px',
-//                           display: 'flex',
-//                           alignItems: 'center',
-//                           justifyContent: 'center'
-//                         }}
-//                       >
-//                         <ViewDay
-//                           sx={{
-//                             width: '80px',
-//                             height: '80px',
-//                             margin: '0 auto',
-//                             color: 'grey'
-//                           }}
-//                         />
-//                       </Box>
-//                     )}
-//                   </CardActionArea>
-//                   <CardContent sx={{ display: 'block', padding: 0, width: '100%' }}>
-//                     <Typography variant="body2" color="secondary.contrastText" component="p">
-//                       {movie.title}
-//                     </Typography>
-//                     <Typography variant="body2" color="secondary.contrastText">
-//                       {movie.rating}
-//                     </Typography>
-//                     {movie.watchers && (
-//                       <Typography variant="body2" color="secondary.contrastText">
-//                         {movie.watchers} watching
-//                       </Typography>
-//                     )}
-//                     {movie.forYou && (
-//                       <Typography variant="body2" color="secondary.contrastText">
-//                         {movie.forYou}
-//                       </Typography>
-//                     )}
-//                   </CardContent>
-//                 </Card>
-//               </Grid>
-//             ))}
-//           </Grid>
-//         </Box>
-//       ))}
-//     </Stack>
-//   )
-// }
