@@ -176,24 +176,24 @@ const SettingsPage: FC = () => {
           Источники информации
         </Typography>
         <List>
-          <ListItem>
+          {/* <ListItem>
             <ListItemIcon>
               <Settings />
             </ListItemIcon>
             <ListItemText primary="Trakt.tv API" />
-          </ListItem>
-          <ListItem>
+          </ListItem> */}
+          <ListItem button component="a" href="https://www.themoviedb.org/" target="_blank">
             <ListItemIcon>
               <Settings />
             </ListItemIcon>
             <ListItemText primary="TMDb API" />
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <ListItemIcon>
               <Settings />
             </ListItemIcon>
             <ListItemText primary="JustWatch" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Box>
     </Stack>

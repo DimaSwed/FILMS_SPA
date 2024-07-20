@@ -1,8 +1,8 @@
 'use client'
-import { Roboto } from 'next/font/google'
+import { Quicksand, Oswald, Ubuntu } from 'next/font/google'
 import { createTheme, ThemeOptions } from '@mui/material/styles'
 
-const roboto = Roboto({
+const roboto = Ubuntu({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap'
@@ -39,7 +39,7 @@ const commonSettings: ThemeOptions = {
       fontSize: '70px',
       transition: 'font-size 2s ease',
       '@media (max-width:1200px)': { fontSize: '60px' },
-      '@media (max-width:900px)': { fontSize: '40px' },
+      '@media (max-width:900px)': { fontSize: '45px' },
       '@media (max-width:600px)': { fontSize: '30px' },
       fontWeight: 400,
       fontStyle: 'normal',
@@ -50,9 +50,9 @@ const commonSettings: ThemeOptions = {
     h4: {
       fontSize: '55px',
       transition: 'font-size 2s ease',
-      '@media (max-width:1200px)': { fontSize: '35px' },
-      '@media (max-width:900px)': { fontSize: '30px' },
-      '@media (max-width:600px)': { fontSize: '25px' },
+      '@media (max-width:1200px)': { fontSize: '40px' },
+      '@media (max-width:900px)': { fontSize: '35px' },
+      '@media (max-width:600px)': { fontSize: '30px' },
       fontWeight: 500,
       fontStyle: 'normal',
       letterSpacing: 0,
@@ -61,9 +61,9 @@ const commonSettings: ThemeOptions = {
     h5: {
       fontSize: '40px',
       transition: 'font-size 2s ease',
-      '@media (max-width:1200px)': { fontSize: '25px' },
-      '@media (max-width:900px)': { fontSize: '20px' },
-      '@media (max-width:600px)': { fontSize: '18px' },
+      '@media (max-width:1200px)': { fontSize: '28px' },
+      '@media (max-width:900px)': { fontSize: '25px' },
+      '@media (max-width:600px)': { fontSize: '23px' },
       fontWeight: 400,
       fontStyle: 'normal',
       lineHeight: '130%',

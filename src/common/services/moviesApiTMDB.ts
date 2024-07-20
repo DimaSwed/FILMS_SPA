@@ -1,20 +1,5 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-
-// Интерфейсы для структуры данных API
-export interface Movie {
-  id: number
-  title: string
-  rating: number
-  image: string
-  year: number
-  genre?: string
-}
-
-export interface MoviesResponse {
-  docs: Movie[]
-  page: number
-  limit: number
-}
+import { Movie, MoviesResponse, Genre } from '../types/types'
 
 // Получаем API ключ из переменных окружения
 const API = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN_AUTH as string
@@ -67,7 +52,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),
@@ -84,7 +70,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),
@@ -101,7 +88,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),
@@ -118,7 +106,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),
@@ -133,7 +122,9 @@ export const moviesApi = createApi({
         title: response.title,
         rating: response.vote_average,
         image: `https://image.tmdb.org/t/p/w500${response.poster_path}`,
-        year: new Date(response.release_date).getFullYear()
+        genre: response.genre_ids.map((id: number) => genreMap[id]).join(', '),
+        year: new Date(response.release_date).getFullYear(),
+        duration: response.runtime
       }),
       keepUnusedDataFor: 86400
     }),
@@ -164,7 +155,9 @@ export const moviesApi = createApi({
               title: randomMovie.title,
               rating: randomMovie.vote_average,
               image: `https://image.tmdb.org/t/p/w500${randomMovie.poster_path}`,
-              year: new Date(randomMovie.release_date).getFullYear()
+              genre: randomMovie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+              year: new Date(randomMovie.release_date).getFullYear(),
+              duration: randomMovie.runtime ?? 0
             }
           }
         } catch (error) {
@@ -186,7 +179,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),
@@ -234,7 +228,9 @@ export const moviesApi = createApi({
               title: randomMovie.title,
               rating: randomMovie.vote_average,
               image: `https://image.tmdb.org/t/p/w500${randomMovie.poster_path}`,
-              year: new Date(randomMovie.release_date).getFullYear()
+              genre: randomMovie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+              year: new Date(randomMovie.release_date).getFullYear(),
+              duration: randomMovie.runtime ?? 0
             }
           }
         } catch (error) {
@@ -260,7 +256,9 @@ export const moviesApi = createApi({
           title: movie.title,
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          year: new Date(movie.release_date).getFullYear()
+          year: new Date(movie.release_date).getFullYear(),
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
         page: response.page,
         limit: response.total_pages
@@ -268,13 +266,16 @@ export const moviesApi = createApi({
       keepUnusedDataFor: 86400
     }),
 
-    fetchGenres: builder.query<string[], void>({
+    fetchGenres: builder.query<Genre[], void>({
       query: () => ({
         url: '/genre/movie/list',
         params: { language: 'ru-RU', region: 'RU' }
       }),
       transformResponse: (response: { genres: any[] }) =>
-        response.genres.map((genre: any) => genre.name),
+        response.genres.map((genre: any) => ({
+          id: genre.id,
+          name: genre.name
+        })),
       keepUnusedDataFor: 86400
     }),
 
@@ -290,7 +291,8 @@ export const moviesApi = createApi({
           rating: movie.vote_average,
           image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
           year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', ')
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
     }),

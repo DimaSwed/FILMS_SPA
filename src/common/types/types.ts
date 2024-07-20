@@ -1,11 +1,25 @@
+// export interface Movie {
+//   id: number
+//   title: string
+//   rating: number
+//   image: string
+//   year: number
+// }
+
+// export interface MoviesResponse {
+//   docs: Movie[]
+//   page: number
+//   limit: number
+// }
+
 export interface Movie {
   id: number
   title: string
   rating: number
   image: string
   year: number
-  // genre: string
-  // duration: number
+  genre: string | undefined
+  duration: number
 }
 
 export interface MoviesResponse {
@@ -13,10 +27,8 @@ export interface MoviesResponse {
   page: number
   limit: number
 }
-// export interface Movie {
-//   id: number
-//   title: string
-//   rating: number
-//   image: string
-//   year: string
-// }
+
+export interface Genre {
+  id: number
+  name: string
+}
