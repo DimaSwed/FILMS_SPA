@@ -12,7 +12,7 @@ import {
   CardActionArea
 } from '@mui/material'
 import { Movie } from '@/common/types/types'
-import { Favorite, FavoriteBorder } from '@mui/icons-material' // Импортируем иконки
+import { Favorite, FavoriteBorder } from '@mui/icons-material'
 
 interface MovieCardProps {
   movie: Movie

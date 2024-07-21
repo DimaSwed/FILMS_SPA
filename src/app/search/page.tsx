@@ -15,7 +15,7 @@ const SearchMoviesByGenres: FC = () => {
         overflow: 'hidden'
       }}
     >
-      <Typography variant="h3" gutterBottom textAlign={'center'} mb={5}>
+      <Typography variant="h3" gutterBottom textAlign={'center'} mb={2}>
         Поиск фильма
       </Typography>
 

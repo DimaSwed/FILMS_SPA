@@ -40,10 +40,28 @@ export const moviesApi = createApi({
     }
   }),
   endpoints: (builder) => ({
+    // fetchMoviesByFilters: builder.query<Movie[], { [key: string]: any }>({
+    //   query: (params) => ({
+    //     url: '/discover/movie',
+    //     params: { ...params, language: 'ru-RU', region: 'RU' }
+    //   }),
+    //   transformResponse: (response: { results: any[] }) =>
+    //     response.results.map((movie: any) => ({
+    //       id: movie.id,
+    //       title: movie.title,
+    //       rating: movie.vote_average,
+    //       image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+    //       year: new Date(movie.release_date).getFullYear(),
+    //       genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+    //       duration: movie.runtime ?? 0
+    //     })),
+    //   keepUnusedDataFor: 86400
+    // }),
+
     fetchMoviesByFilters: builder.query<Movie[], { [key: string]: any }>({
       query: (params) => ({
         url: '/discover/movie',
-        params: { ...params, language: 'ru-RU', region: 'RU' }
+        params: { ...params, language: 'ru-RU', region: 'RU', query: params.searchQuery }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({

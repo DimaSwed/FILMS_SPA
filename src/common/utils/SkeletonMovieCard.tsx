@@ -1,13 +1,5 @@
 import { FC } from 'react'
-import {
-  Box,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActionArea,
-  Typography,
-  Skeleton
-} from '@mui/material'
+import { Box, Card, CardContent, CardActionArea, Typography, Skeleton } from '@mui/material'
 
 export const SkeletonMovieCard: FC = () => {
   return (

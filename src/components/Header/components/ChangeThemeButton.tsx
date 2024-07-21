@@ -69,7 +69,7 @@ import { themeReducer } from '@/common/store'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 
-const ChangeThemeButton: FC = () => {
+export const ChangeThemeButton: FC = () => {
   const dispatch = useAppDispatch()
   const darkTheme = useAppSelector((store) => store.theme.theme) === 'dark'
   const [isMounted, setIsMounted] = useState(false)
@@ -124,5 +124,3 @@ const ChangeThemeButton: FC = () => {
     </ListItem>
   )
 }
-
-export default ChangeThemeButton

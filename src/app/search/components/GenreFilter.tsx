@@ -10,7 +10,8 @@ import {
   Stack,
   Grid,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  TextField
 } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
 import { useFetchGenresQuery, useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
@@ -23,6 +24,7 @@ export interface Genre {
 }
 
 const GenreFilter: FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const { data: genres, isLoading: genresLoading } = useFetchGenresQuery()
   const [selectedGenre, setSelectedGenre] = useState<number | ''>('')
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('recommendations')
@@ -34,8 +36,14 @@ const GenreFilter: FC = () => {
     recommendation: selectedRecommendation,
     criteria: additionalCriteria,
     country: selectedCountry,
-    year: selectedYear
+    year: selectedYear,
+    searchQuery
   })
+
+  // Обработчик для строки поиска
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
 
   const handleGenreChange = (event: SelectChangeEvent<number | ''>) => {
     setSelectedGenre(event.target.value as number | '')
@@ -115,6 +123,41 @@ const GenreFilter: FC = () => {
         p: 2
       }}
     >
+      <TextField
+        label="Поиск по названию"
+        variant="outlined"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        InputLabelProps={{
+          sx: {
+            color: 'secondary.contrastText',
+            '&.Mui-focused': {
+              color: 'secondary.contrastText'
+            },
+            '&.MuiInputLabel-shrink': {
+              color: 'secondary.contrastText'
+            }
+          }
+        }}
+        InputProps={{
+          sx: {
+            color: 'secondary.contrastText',
+            backgroundColor: 'background.paper',
+            '.MuiOutlinedInput-notchedOutline': {
+              borderColor: '#444'
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'secondary.contrastText'
+            }
+          }
+        }}
+        sx={{
+          width: '100%',
+          maxWidth: '600px',
+          mb: 1
+        }}
+      />
+
       <Stack
         sx={{
           display: 'flex',
@@ -180,7 +223,7 @@ const GenreFilter: FC = () => {
               }
             }}
           >
-            Жанры
+            Жанр
           </InputLabel>
           <Select
             value={selectedGenre}
@@ -215,7 +258,7 @@ const GenreFilter: FC = () => {
               }
             }}
           >
-            Страны
+            Страна
           </InputLabel>
           <Select
             value={selectedCountry}
@@ -250,7 +293,7 @@ const GenreFilter: FC = () => {
               }
             }}
           >
-            Года
+            Год
           </InputLabel>
           <Select
             value={selectedYear}
@@ -282,8 +325,8 @@ const GenreFilter: FC = () => {
               color: 'secondary.contrastText',
               backgroundColor: 'background.paper',
               border: '1px solid #444',
-              maxWidth: '160px',
-              width: '100%',
+              // maxWidth: '160px',
+              // width: '100%',
               '&.Mui-selected': {
                 color: 'text.primary',
                 backgroundColor: 'primary.dark'
@@ -314,86 +357,6 @@ const GenreFilter: FC = () => {
 }
 
 export default GenreFilter
-
-// 'use client'
-// import { FC, useState } from 'react'
-// import {
-//   Box,
-//   MenuItem,
-//   Select,
-//   FormControl,
-//   InputLabel,
-//   CircularProgress,
-//   Typography
-// } from '@mui/material'
-// import { SelectChangeEvent } from '@mui/material/Select'
-// import { useFetchGenresQuery, useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
-// import Image from 'next/image'
-// import { Movie } from '@/common/types/types'
-
-// export interface Genre {
-//   id: number
-//   name: string
-// }
-
-// const GenreFilter: FC = () => {
-//   const { data: genres, isLoading: genresLoading } = useFetchGenresQuery()
-//   const [selectedGenre, setSelectedGenre] = useState<number | ''>('')
-//   const { data: filteredMovies, isLoading: moviesLoading } = useFetchMoviesByFiltersQuery({
-//     genre: selectedGenre
-//   })
-
-//   const handleGenreChange = (event: SelectChangeEvent<number | ''>) => {
-//     setSelectedGenre(event.target.value as number | '')
-//   }
-
-//   return (
-//     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-//       <FormControl sx={{ maxWidth: '300px', width: '100%' }}>
-//         <InputLabel sx={{ color: 'secondary.contrastText' }}>Выберите жанр</InputLabel>
-//         <Select
-//           value={selectedGenre}
-//           onChange={handleGenreChange}
-//           label="Выберите жанр"
-//           sx={{ color: 'secondary.contrastText' }}
-//         >
-//           <MenuItem sx={{ color: 'secondary.contrastText' }} value="">
-//             <em>Все жанры</em>
-//           </MenuItem>
-//           {genres?.map((genre: Genre) => (
-//             <MenuItem sx={{ color: 'secondary.contrastText' }} key={genre.id} value={genre.id}>
-//               {genre.name}
-//             </MenuItem>
-//           ))}
-//         </Select>
-//       </FormControl>
-
-//       {genresLoading || moviesLoading ? (
-//         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-//           <CircularProgress />
-//         </Box>
-//       ) : (
-//         <Box mt={2}>
-//           {filteredMovies?.map((movie: Movie) => (
-//             <Box key={movie.id} mb={2}>
-//               <Image
-//                 src={movie.image}
-//                 alt={movie.title}
-//                 width={200}
-//                 height={300}
-//                 layout="responsive"
-//               />
-//               <Typography variant="h6">{movie.title}</Typography>
-//               <Typography variant="body2">{movie.genre ?? 'Неизвестно'}</Typography>
-//             </Box>
-//           ))}
-//         </Box>
-//       )}
-//     </Box>
-//   )
-// }
-
-// export default GenreFilter
 
 // 'use client'
 // import { FC, useState } from 'react'
