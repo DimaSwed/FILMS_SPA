@@ -23,7 +23,7 @@ const SearchMovieButton: FC = () => {
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: 'relative', display: { xs: 'none', md: 'block' } }}>
       {!searchOpen ? (
         <IconButton sx={{ color: 'primary.contrastText' }} onClick={handleSearchClick}>
           <SearchIcon />
@@ -37,11 +37,11 @@ const SearchMovieButton: FC = () => {
               alignItems: 'center',
               backgroundColor: 'background.paper',
               borderRadius: 1,
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: '400px',
+              // position: 'absolute',
+              // right: 0,
+              // top: 0,
+              // bottom: 0,
+              width: '320px',
               zIndex: 1000,
               boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)'
             }}
