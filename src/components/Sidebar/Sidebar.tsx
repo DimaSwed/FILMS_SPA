@@ -191,7 +191,7 @@ const Sidebar: FC = () => {
         </SidebarItem>
 
         <SidebarItem primary="Ознакомиться">
-          <ListItem button sx={{ pl: { xs: 1, md: 4 } }}>
+          <ListItem onClick={() => router.push('/trailers')} button sx={{ pl: { xs: 1, md: 4 } }}>
             <ListItemIcon sx={{ minWidth: { xs: 'auto', md: '56px' } }}>
               <FeaturedVideoIcon sx={{ color: 'text.primary' }} />
             </ListItemIcon>
@@ -216,7 +216,11 @@ const Sidebar: FC = () => {
         </SidebarItem>
 
         <SidebarItem primary="Списки">
-          <ListItem button sx={{ pl: { xs: 1, md: 4 } }}>
+          <ListItem
+            onClick={() => router.push('/add-to-watch-list')}
+            button
+            sx={{ pl: { xs: 1, md: 4 } }}
+          >
             <ListItemIcon sx={{ minWidth: { xs: 'auto', md: '56px' } }}>
               <ListIcon sx={{ color: 'text.primary' }} />
             </ListItemIcon>

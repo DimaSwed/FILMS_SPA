@@ -3,6 +3,7 @@ import { Movie, MoviesResponse, Genre } from '../types/types'
 
 // Получаем API ключ из переменных окружения
 const API = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN_AUTH as string
+const ACCOUNT_ID = process.env.NEXT_PUBLIC_TMDB_API_KEY as string
 
 // Создаем карту жанров
 const genreMap: { [key: number]: string } = {
@@ -57,7 +58,7 @@ export const moviesApi = createApi({
     //     })),
     //   keepUnusedDataFor: 86400
     // }),
-
+    // Последжний рабочий вариант
     fetchMoviesByFilters: builder.query<Movie[], { [key: string]: any }>({
       query: (params) => ({
         url: '/discover/movie',
@@ -74,6 +75,86 @@ export const moviesApi = createApi({
           duration: movie.runtime ?? 0
         })),
       keepUnusedDataFor: 86400
+    }),
+
+    fetchMovieTrailers: builder.query<any, number>({
+      query: (id) => ({
+        url: `/movie/${id}/videos`,
+        params: { language: 'ru-RU' }
+      }),
+      transformResponse: (response: { results: any[] }) => {
+        return response.results.filter((video) => video.type === 'Trailer')
+      },
+      keepUnusedDataFor: 86400
+    }),
+
+    // Эндпоинт для добавления фильма в список
+    addMovieToWatchlist: builder.mutation<void, { movieId: number }>({
+      query: ({ movieId }) => ({
+        url: `/account/${ACCOUNT_ID}/watchlist`,
+        method: 'POST',
+        body: {
+          media_type: 'movie',
+          media_id: movieId,
+          watchlist: true
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }),
+      transformResponse: (response: any) => {
+        // Обработка ответа при необходимости
+        return response
+      }
+    }),
+
+    // Эндпоинт для получения фильмов из списка
+    getWatchlistMovies: builder.query<Movie[], void>({
+      query: () => ({
+        url: `/account/${ACCOUNT_ID}/watchlist/movies`,
+        params: { language: 'ru-RU', page: '1', sort_by: 'created_at.asc' }
+      }),
+      transformResponse: (response: { results: any[] }) => {
+        return response.results.map((movie: any) => ({
+          id: movie.id,
+          title: movie.title,
+          rating: movie.vote_average,
+          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          year: new Date(movie.release_date).getFullYear(),
+          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+          duration: movie.runtime ?? 0
+        }))
+      }
+    }),
+
+    removeMovieFromWatchlist: builder.mutation<void, { movieId: number }>({
+      query: ({ movieId }) => ({
+        url: `/account/${ACCOUNT_ID}/watchlist`,
+        method: 'POST',
+        body: {
+          media_type: 'movie',
+          media_id: movieId,
+          watchlist: false
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }),
+      async onQueryStarted({ movieId }, { dispatch, queryFulfilled }) {
+        // Оптимистичное обновление кэша
+        const patchResult = dispatch(
+          moviesApi.util.updateQueryData('getWatchlistMovies', undefined, (draft) => {
+            return draft.filter((movie) => movie.id !== movieId)
+          })
+        )
+
+        try {
+          await queryFulfilled
+        } catch {
+          // При ошибке отменяем обновление
+          patchResult.undo()
+        }
+      }
     }),
 
     fetchUpcomingMovies: builder.query<Movie[], void>({
@@ -340,7 +421,11 @@ export const {
   useFetchTopRatedMoviesQuery,
   useFetchPopularMoviesQuery,
   useFetchNowPlayingMoviesQuery,
-  useFetchTrendingMoviesQuery
+  useFetchTrendingMoviesQuery,
+  useFetchMovieTrailersQuery,
+  useAddMovieToWatchlistMutation,
+  useGetWatchlistMoviesQuery,
+  useRemoveMovieFromWatchlistMutation
 } = moviesApi
 
 // import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
