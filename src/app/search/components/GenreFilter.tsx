@@ -14,18 +14,13 @@ import {
   TextField
 } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
-import { useFetchGenresQuery, useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
+import { useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
 import { Movie } from '@/common/types/types'
 import MovieCard from './SmallMovieCard'
-
-export interface Genre {
-  id: number
-  name: string
-}
+import { GENRES_LIST, YEARS_LIST, COUNTRIES_LIST } from '@/common/constants/constants'
 
 const GenreFilter: FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const { data: genres, isLoading: genresLoading } = useFetchGenresQuery()
   const [selectedGenre, setSelectedGenre] = useState<number | ''>('')
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('recommendations')
   const [additionalCriteria, setAdditionalCriteria] = useState<string[]>([])
@@ -67,50 +62,6 @@ const GenreFilter: FC = () => {
   const handleYearChange = (event: SelectChangeEvent<string>) => {
     setSelectedYear(event.target.value as string)
   }
-
-  const GENRES_LIST = [
-    { id: 28, name: 'Боевик' },
-    { id: 12, name: 'Приключения' },
-    { id: 16, name: 'Анимация' },
-    { id: 35, name: 'Комедия' },
-    { id: 80, name: 'Криминал' },
-    { id: 18, name: 'Драма' },
-    { id: 10751, name: 'Семейный' },
-    { id: 14, name: 'Фэнтези' },
-    { id: 36, name: 'Исторический' },
-    { id: 27, name: 'Ужасы' },
-    { id: 10402, name: 'Музыка' },
-    { id: 9648, name: 'Детектив' },
-    { id: 10749, name: 'Романтика' },
-    { id: 878, name: 'Научная фантастика' },
-    { id: 10770, name: 'ТВ шоу' },
-    { id: 53, name: 'Триллер' },
-    { id: 10752, name: 'Военный' },
-    { id: 37, name: 'Вестерн' }
-  ]
-
-  const COUNTRIES_LIST = [
-    'США',
-    'Великобритания',
-    'Франция',
-    'Германия',
-    'Япония',
-    'Китай',
-    'Индия',
-    'Россия'
-  ]
-  const YEARS_LIST = [
-    'до 1980',
-    '1980-1989',
-    '1990-1999',
-    '2000-2009',
-    '2010-2019',
-    '2020',
-    '2021',
-    '2022',
-    '2023',
-    '2024'
-  ]
 
   return (
     <Box
@@ -343,7 +294,7 @@ const GenreFilter: FC = () => {
         </ToggleButtonGroup>
       </Stack>
 
-      {genresLoading || moviesLoading ? (
+      {moviesLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
           <CircularProgress />
         </Box>
