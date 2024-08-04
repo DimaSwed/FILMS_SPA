@@ -111,11 +111,11 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ ml: 1 }}
+                sx={{ ml: 1, textAlign: 'center' }}
                 onClick={handleAddToWatchlist}
                 disabled={isLoading} // Делаем кнопку неактивной во время загрузки
               >
-                {isLoading ? 'Добавление...' : 'Добавить в список просмотра'}
+                {isLoading ? 'Добавление ...' : 'Добавить в список просмотра'}
               </Button>
               {isError && (
                 <Typography color="error" variant="body2">

@@ -531,6 +531,8 @@ import Filters from './components/Genre&YearFilter'
 import LoadingOrError from './components/LoadingOrError'
 import MovieCard from './components/WatchListCard'
 import NoMovies from './components/NoMovies'
+import Link from 'next/link'
+import Head from 'next/head'
 
 const AddToWatchList: FC = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>('')
@@ -546,37 +548,6 @@ const AddToWatchList: FC = () => {
   })
 
   const [removeMovieFromWatchlist] = useRemoveMovieFromWatchlistMutation()
-
-  // const filteredMovies = useMemo(() => {
-  //   if (!watchlistMovies) return []
-
-  //   const validMovies = watchlistMovies.filter(
-  //     (movie) => movie.title && movie.rating > 0 && movie.year > 0
-  //   )
-
-  //   let updatedMovies = [...validMovies]
-
-  //   if (selectedGenre) {
-  //     updatedMovies = updatedMovies.filter(
-  //       (movie) => movie.genre && movie.genre.includes(selectedGenre)
-  //     )
-  //   }
-
-  //   if (selectedYear) {
-  //     if (selectedYear === 'до 1980') {
-  //       updatedMovies = updatedMovies.filter((movie) => movie.year < 1980)
-  //     } else if (selectedYear.includes('-')) {
-  //       const [startYear, endYear] = selectedYear.split('-').map(Number)
-  //       updatedMovies = updatedMovies.filter(
-  //         (movie) => movie.year >= startYear && movie.year <= endYear
-  //       )
-  //     } else {
-  //       updatedMovies = updatedMovies.filter((movie) => movie.year === Number(selectedYear))
-  //     }
-  //   }
-
-  //   return updatedMovies
-  // }, [watchlistMovies, selectedGenre, selectedYear])
 
   const filteredMovies = useMemo(() => {
     if (!watchlistMovies) return []
@@ -638,45 +609,51 @@ const AddToWatchList: FC = () => {
   )
 
   return (
-    <Box
-      component="main"
-      minHeight={'100%'}
-      sx={{
-        padding: { xs: '10px', sm: '15px', md: '30px' },
-        color: 'secondary.contrastText',
-        bgcolor: 'background.paper',
-        width: '100%',
-        overflow: 'hidden'
-      }}
-    >
-      <Typography variant="h3" gutterBottom textAlign={'center'} mb={5}>
-        Список к просмотру
-      </Typography>
+    <>
+      <Head>
+        <Link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/logomain.jpg" />
+      </Head>
+      <Box
+        component="main"
+        minHeight={'100%'}
+        sx={{
+          padding: { xs: '10px', sm: '15px', md: '30px' },
+          color: 'secondary.contrastText',
+          bgcolor: 'background.paper',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Typography variant="h3" gutterBottom textAlign={'center'} mb={5}>
+          Список к просмотру
+        </Typography>
 
-      <Filters
-        selectedGenre={selectedGenre}
-        selectedYear={selectedYear}
-        onGenreChange={handleGenreChange}
-        onYearChange={handleYearChange}
-        onResetFilters={handleResetFilters}
-      />
+        <Filters
+          selectedGenre={selectedGenre}
+          selectedYear={selectedYear}
+          onGenreChange={handleGenreChange}
+          onYearChange={handleYearChange}
+          onResetFilters={handleResetFilters}
+        />
 
-      <LoadingOrError isLoading={isFetchingWatchlist} isError={isError} error={error} />
+        <LoadingOrError isLoading={isFetchingWatchlist} isError={isError} error={error} />
 
-      {filteredMovies.length > 0 ? (
-        <Box display="flex" flexDirection="column" gap={2}>
-          {filteredMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onRemoveFromWatchlist={handleRemoveFromWatchlist}
-            />
-          ))}
-        </Box>
-      ) : (
-        <NoMovies />
-      )}
-    </Box>
+        {filteredMovies.length > 0 ? (
+          <Box display="flex" flexDirection="column" gap={2}>
+            {filteredMovies.map((movie) => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                onRemoveFromWatchlist={handleRemoveFromWatchlist}
+              />
+            ))}
+          </Box>
+        ) : (
+          <NoMovies />
+        )}
+      </Box>
+    </>
   )
 }
 

@@ -105,16 +105,9 @@ import {
   useFetchTrendingMoviesQuery
 } from '@/common/services/moviesApiTMDB'
 import MovieCategory from '@/components/Films/MovieCategory'
+import { Category } from '@/common/types/types'
 
 const Home = () => {
-  const today = new Date()
-  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-    .toISOString()
-    .split('T')[0]
-  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-    .toISOString()
-    .split('T')[0]
-
   const { data: nowPlayingMovies, isLoading: isLoadingNowPlayingMovies } =
     useFetchNowPlayingMoviesQuery()
   const { data: popularMovies, isLoading: isLoadingPopularMovies } = useFetchPopularMoviesQuery()
@@ -122,7 +115,7 @@ const Home = () => {
   const { data: topRatedMovies, isLoading: isLoadingTopRatedMovies } = useFetchTopRatedMoviesQuery()
   const { data: trendingMovies, isLoading: isLoadingTrendingMovies } = useFetchTrendingMoviesQuery()
 
-  const categories = [
+  const categories: Category[] = [
     { title: 'Сейчас в тренде', movies: trendingMovies || [], isLoading: isLoadingTrendingMovies },
     {
       title: 'Сейчас в прокате',

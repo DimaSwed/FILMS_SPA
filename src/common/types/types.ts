@@ -8,6 +8,12 @@ export interface Movie {
   duration: number
 }
 
+export interface Category {
+  title: string
+  movies: Movie[]
+  isLoading: boolean
+}
+
 export interface MoviesResponse {
   docs: Movie[]
   page: number

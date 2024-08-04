@@ -77,6 +77,8 @@ import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { Typography, Grid, Card, CardContent, CircularProgress, Box, Stack } from '@mui/material'
 import { useFetchUpcomingMoviesQuery } from '@/common/services/moviesApiTMDB'
+import Head from 'next/head'
+import Link from 'next/link'
 const fetchMovieTrailers = async (movieId: number) => {
   try {
     const response = await fetch(`https://api.example.com/movies/${movieId}/trailers`)
@@ -148,58 +150,68 @@ const LatestTrailers: NextPage = () => {
     )
 
   return (
-    <Stack
-      sx={{
-        padding: { xs: '10px', sm: '15px', md: '30px' },
-        color: 'secondary.contrastText',
-        bgcolor: 'background.paper',
-        width: '100%'
-      }}
-    >
-      <Box sx={{ textAlign: 'center', mb: 4, width: '100%' }}>
-        <Typography variant="h4" gutterBottom>
-          Последние трейлеры
-        </Typography>
-        <Grid container spacing={3}>
-          {movies?.map((movie) => (
-            <Grid item xs={12} sm={6} md={4} key={movie.id}>
-              <Card
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  bgcolor: 'background.default',
-                  color: 'secondary.contrastText',
-                  borderRadius: 1,
-                  boxShadow: 3
-                }}
-              >
-                <Box sx={{ position: 'relative', height: 140 }}>
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube.com/embed/${trailerIds[movie.id]}`}
-                    title={movie.title}
-                    // frameBorder="0"
-                    // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    // allowFullScreen
-                    // style={{ borderRadius: '4px' }}
-                  ></iframe>
-                </Box>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" component="div" sx={{ color: 'secondary.contrastText' }}>
-                    {movie.title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
-                    {movie.year} | Рейтинг: {movie.rating}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    </Stack>
+    <>
+      <Head>
+        <Link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/logomain.jpg" />
+      </Head>
+      <Stack
+        sx={{
+          padding: { xs: '10px', sm: '15px', md: '30px' },
+          color: 'secondary.contrastText',
+          bgcolor: 'background.paper',
+          width: '100%'
+        }}
+      >
+        <Box sx={{ textAlign: 'center', mb: 4, width: '100%' }}>
+          <Typography variant="h4" gutterBottom>
+            Последние трейлеры
+          </Typography>
+          <Grid container spacing={3}>
+            {movies?.map((movie) => (
+              <Grid item xs={12} sm={6} md={4} key={movie.id}>
+                <Card
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    bgcolor: 'background.default',
+                    color: 'secondary.contrastText',
+                    borderRadius: 1,
+                    boxShadow: 3
+                  }}
+                >
+                  <Box sx={{ position: 'relative', height: 140 }}>
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${trailerIds[movie.id]}`}
+                      title={movie.title}
+                      // frameBorder="0"
+                      // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      // allowFullScreen
+                      // style={{ borderRadius: '4px' }}
+                    ></iframe>
+                  </Box>
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ color: 'secondary.contrastText' }}
+                    >
+                      {movie.title}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
+                      {movie.year} | Рейтинг: {movie.rating}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Stack>
+    </>
   )
 }
 

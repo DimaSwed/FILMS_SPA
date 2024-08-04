@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Movie, MoviesResponse, Genre } from '../types/types'
-import { GENRES_LIST } from '../constants/constants'
+import { GENRES_MAP } from '../constants/constants'
 
 // Получаем API ключ из переменных окружения
 const API = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN_AUTH as string
 const ACCOUNT_ID = process.env.NEXT_PUBLIC_TMDB_API_KEY as string
 
 // Создаем карту жанров
-const genreMap = GENRES_LIST
+const genreMap = GENRES_MAP
 
 // Создаем API с использованием RTK Query
 export const moviesApi = createApi({
@@ -97,15 +97,22 @@ export const moviesApi = createApi({
         params: { language: 'ru-RU', page: '1', sort_by: 'created_at.asc' }
       }),
       transformResponse: (response: { results: any[] }) => {
-        return response.results.map((movie: any) => ({
-          id: movie.id,
-          title: movie.title,
-          rating: movie.vote_average,
-          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          year: new Date(movie.release_date).getFullYear(),
-          genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
-          duration: movie.runtime ?? 0
-        }))
+        return response.results.map((movie: any) => {
+          // console.log('Original movie data:', movie)
+
+          const genres = movie.genre_ids.map((id: number) => genreMap[id] || 'Неизвестно')
+          // console.log('Mapped genres:', genres)
+
+          return {
+            id: movie.id,
+            title: movie.title,
+            rating: movie.vote_average,
+            image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            year: new Date(movie.release_date).getFullYear(),
+            genre: genres.join(', '),
+            duration: movie.runtime ?? 0
+          }
+        })
       }
     }),
 
