@@ -24,6 +24,7 @@
     "js-cookie": "^3.0.5",
     "next": "14.2.3",
     "next-navigation": "^1.0.6",
+    "next-redux-wrapper": "^8.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-google-recaptcha": "^3.1.0",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@types/eslint": "^8",
     "@types/js-cookie": "^3.0.6",
+    "@types/next-redux-wrapper": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

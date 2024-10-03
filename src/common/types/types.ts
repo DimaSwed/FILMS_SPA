@@ -6,6 +6,7 @@ export interface Movie {
   year: number
   genre: string | string[]
   duration: number
+  description?: string
 }
 
 export interface Category {

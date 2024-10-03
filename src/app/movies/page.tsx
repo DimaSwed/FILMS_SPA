@@ -183,6 +183,7 @@
 //     </>
 //   )
 // }
+// ПОСЛЕДНИЙ РАБОЧИЙ ВАРИАНТ
 import React, { FC } from 'react'
 import Head from 'next/head'
 import { Box, Typography } from '@mui/material'

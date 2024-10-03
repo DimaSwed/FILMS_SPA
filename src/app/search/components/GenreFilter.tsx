@@ -14,7 +14,7 @@ import {
   TextField
 } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
-import { useFetchMoviesByFiltersQuery } from '@/common/services/moviesApiTMDB'
+import { useFetchMoviesByFiltersQuery, useSearchMoviesQuery } from '@/common/services/moviesApiTMDB'
 import { Movie } from '@/common/types/types'
 import MovieCard from './SmallMovieCard'
 import { GENRES_LIST, YEARS_LIST, COUNTRIES_LIST } from '@/common/constants/constants'
@@ -35,6 +35,7 @@ const GenreFilter: FC = () => {
     searchQuery
   })
 
+  const { data, isLoading, error } = useSearchMoviesQuery(searchQuery, { skip: !searchQuery })
   // Обработчик для строки поиска
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)

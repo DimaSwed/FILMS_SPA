@@ -202,18 +202,43 @@ export const moviesApi = createApi({
 
     fetchMovieById: builder.query<Movie, number>({
       query: (id) => ({
-        url: `/movie/${id}`,
-        params: { language: 'ru-RU', region: 'RU' }
+        url: `/find/${id}`,
+        // params: { language: 'ru-RU', region: 'RU' }
+        params: {
+          external_source: 'imdb_id', // Укажите источник внешнего идентификатора (например, IMDb ID),
+          api_key: API
+        }
       }),
-      transformResponse: (response: any) => ({
-        id: response.id,
-        title: response.title,
-        rating: response.vote_average,
-        image: `https://image.tmdb.org/t/p/w500${response.poster_path}`,
-        genre: response.genre_ids.map((id: number) => genreMap[id]).join(', '),
-        year: new Date(response.release_date).getFullYear(),
-        duration: response.runtime
-      }),
+
+      transformResponse: (response: any) => {
+        console.log('API response:', response) // Добавьте это для проверки структуры ответа
+        const movie = response.movie_results ? response.movie_results[0] : null
+
+        // Возвращаем дефолтные значения, если фильм не найден
+        if (!movie) {
+          return {
+            id: -1, // Дефолтное значение для идентификатора
+            title: 'Не найдено',
+            rating: 0,
+            image: '', // Пустое значение изображения
+            genre: 'Неизвестно',
+            year: 0,
+            duration: 0,
+            description: 'Фильм не найден'
+          }
+        }
+
+        return {
+          id: movie.id,
+          title: movie.title,
+          rating: movie.vote_average,
+          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          genre: movie.genre_ids.map((id: number) => genreMap[id] || 'Неизвестно').join(', '),
+          year: new Date(movie.release_date).getFullYear(),
+          duration: movie.runtime ?? 0,
+          description: movie.overview
+        }
+      },
       keepUnusedDataFor: 86400
     }),
 
@@ -328,6 +353,32 @@ export const moviesApi = createApi({
       keepUnusedDataFor: 86400
     }),
 
+    // searchMovies: builder.query<MoviesResponse, string>({
+    //   query: (query) => ({
+    //     url: '/search/movie',
+    //     params: {
+    //       query,
+    //       page: 1,
+    //       language: 'ru-RU',
+    //       region: 'RU'
+    //     }
+    //   }),
+    //   transformResponse: (response: { results: any[]; page: number; total_pages: number }) => ({
+    //     docs: response.results.map((movie: any) => ({
+    //       id: movie.id,
+    //       title: movie.title,
+    //       rating: movie.vote_average,
+    //       image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+    //       year: new Date(movie.release_date).getFullYear(),
+    //       genre: movie.genre_ids.map((id: number) => genreMap[id]).join(', '),
+    //       duration: movie.runtime ?? 0
+    //     })),
+    //     page: response.page,
+    //     limit: response.total_pages
+    //   }),
+    //   keepUnusedDataFor: 86400
+    // }),
+
     searchMovies: builder.query<MoviesResponse, string>({
       query: (query) => ({
         url: '/search/movie',
@@ -414,5 +465,6 @@ export const {
   useFetchMovieTrailersQuery,
   useAddMovieToWatchlistMutation,
   useGetWatchlistMoviesQuery,
-  useRemoveMovieFromWatchlistMutation
+  useRemoveMovieFromWatchlistMutation,
+  useLazySearchMoviesQuery
 } = moviesApi

@@ -122,7 +122,7 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
           {movie.year}
         </Typography>
 
-        <Link href={`/movies/${movie.id}`}>
+        <Link href={`/movie/${movie.id}`} passHref>
           <Button variant="contained" size="small" sx={{ mt: '3px' }}>
             Подробнее
           </Button>
