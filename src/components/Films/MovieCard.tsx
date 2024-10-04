@@ -45,17 +45,19 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
       >
         <CardActionArea>
           {movie.image ? (
-            <CardMedia
-              component="img"
-              image={movie.image}
-              alt={movie.title}
-              sx={{
-                color: 'secondary.contrastText',
-                width: '100%',
-                height: '225px',
-                margin: '0 auto'
-              }}
-            />
+            <Link href={`/movie/${movie.id}`} passHref>
+              <CardMedia
+                component="img"
+                image={movie.image}
+                alt={movie.title}
+                sx={{
+                  color: 'secondary.contrastText',
+                  width: '100%',
+                  height: '225px',
+                  margin: '0 auto'
+                }}
+              />
+            </Link>
           ) : (
             <Box
               sx={{
@@ -88,7 +90,7 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
               borderRadius: '0 10px 0 10px'
             }}
           >
-            {movie.rating}
+            {movie.rating.toFixed(1)}
           </Box>
         </CardActionArea>
       </Card>

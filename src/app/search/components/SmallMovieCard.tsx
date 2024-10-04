@@ -14,15 +14,17 @@ import {
 import { Movie } from '@/common/types/types'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import { useAddMovieToWatchlistMutation } from '@/common/services/moviesApiTMDB'
+import { useRouter } from 'next/navigation'
 
 interface MovieCardProps {
   movie: Movie
 }
 
 const MovieCard: FC<MovieCardProps> = ({ movie }) => {
+  const router = useRouter()
   const [isHovered, setIsHovered] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
-  const [addMovieToWatchlist, { isLoading, isError }] = useAddMovieToWatchlistMutation() // Используем хук
+  const [addMovieToWatchlist, { isLoading, isError }] = useAddMovieToWatchlistMutation()
 
   const handleMouseEnter = () => setIsHovered(true)
   const handleMouseLeave = () => setIsHovered(false)
@@ -36,6 +38,10 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
     } catch (error) {
       console.error('Ошибка при добавлении в список просмотра:', error)
     }
+  }
+
+  const handleMovieSelect = (id: number) => {
+    router.push(`/movie/${id}`)
   }
 
   const ratingColor = movie.rating < 7 ? 'warning.main' : 'success.main'
@@ -88,7 +94,7 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
             }}
           >
             <Typography sx={{ mb: 1, color: ratingColor, fontWeight: 'bold' }}>
-              Рейтинг: {movie.rating}
+              Рейтинг: {movie?.rating.toFixed(1)}
             </Typography>
             <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
               {movie.title}
@@ -128,7 +134,7 @@ const MovieCard: FC<MovieCardProps> = ({ movie }) => {
               variant="contained"
               color="primary"
               sx={{ mt: 1, width: '100%' }}
-              onClick={() => console.log('Перейти к странице фильма')}
+              onClick={() => handleMovieSelect(movie.id)}
             >
               Подробнее
             </Button>

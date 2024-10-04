@@ -200,43 +200,69 @@ export const moviesApi = createApi({
       keepUnusedDataFor: 86400
     }),
 
+    // fetchMovieById: builder.query<Movie, number>({
+    //   query: (id) => ({
+    //     url: `/find/${id}`,
+    //     // params: { language: 'ru-RU', region: 'RU' }
+    //     params: {
+    //       external_source: 'imdb_id', // Укажите источник внешнего идентификатора (например, IMDb ID),
+    //       api_key: API
+    //     }
+    //   }),
+
+    //   transformResponse: (response: any) => {
+    //     console.log('API response:', response) // Добавьте это для проверки структуры ответа
+    //     const movie = response.movie_results ? response.movie_results[0] : null
+
+    //     // Возвращаем дефолтные значения, если фильм не найден
+    //     if (!movie) {
+    //       return {
+    //         id: -1, // Дефолтное значение для идентификатора
+    //         title: 'Не найдено',
+    //         rating: 0,
+    //         image: '', // Пустое значение изображения
+    //         genre: 'Неизвестно',
+    //         year: 0,
+    //         duration: 0,
+    //         description: 'Фильм не найден'
+    //       }
+    //     }
+
+    //     return {
+    //       id: movie.id,
+    //       title: movie.title,
+    //       rating: movie.vote_average,
+    //       image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+    //       genre: movie.genre_ids.map((id: number) => genreMap[id] || 'Неизвестно').join(', '),
+    //       year: new Date(movie.release_date).getFullYear(),
+    //       duration: movie.runtime ?? 0,
+    //       description: movie.overview
+    //     }
+    //   },
+    //   keepUnusedDataFor: 86400
+    // }),
+
     fetchMovieById: builder.query<Movie, number>({
       query: (id) => ({
-        url: `/find/${id}`,
-        // params: { language: 'ru-RU', region: 'RU' }
+        url: `/movie/${id}`, // Используем правильный эндпоинт
         params: {
-          external_source: 'imdb_id', // Укажите источник внешнего идентификатора (например, IMDb ID),
-          api_key: API
+          language: 'ru-RU',
+          api_key: API // Добавляем API ключ
         }
       }),
-
       transformResponse: (response: any) => {
-        console.log('API response:', response) // Добавьте это для проверки структуры ответа
-        const movie = response.movie_results ? response.movie_results[0] : null
-
-        // Возвращаем дефолтные значения, если фильм не найден
-        if (!movie) {
-          return {
-            id: -1, // Дефолтное значение для идентификатора
-            title: 'Не найдено',
-            rating: 0,
-            image: '', // Пустое значение изображения
-            genre: 'Неизвестно',
-            year: 0,
-            duration: 0,
-            description: 'Фильм не найден'
-          }
-        }
-
+        console.log('API response fetchMovieById:', response) // Для проверки структуры ответа
         return {
-          id: movie.id,
-          title: movie.title,
-          rating: movie.vote_average,
-          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          genre: movie.genre_ids.map((id: number) => genreMap[id] || 'Неизвестно').join(', '),
-          year: new Date(movie.release_date).getFullYear(),
-          duration: movie.runtime ?? 0,
-          description: movie.overview
+          id: response.id,
+          title: response.title,
+          rating: response.vote_average,
+          image: `https://image.tmdb.org/t/p/w500${response.poster_path}`,
+          backgroundImage: `https://image.tmdb.org/t/p/original${response.backdrop_path}`,
+          releaseDate: response.release_date,
+          genre: response.genres.map((genre: any) => genre.name).join(', '),
+          year: new Date(response.release_date).getFullYear(),
+          duration: response.runtime ?? 0,
+          description: response.overview
         }
       },
       keepUnusedDataFor: 86400
