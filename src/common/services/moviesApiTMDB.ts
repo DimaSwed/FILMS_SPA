@@ -109,8 +109,10 @@ export const moviesApi = createApi({
             rating: movie.vote_average,
             image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
             year: new Date(movie.release_date).getFullYear(),
+            releaseDate: movie.release_date,
             genre: genres.join(', '),
-            duration: movie.runtime ?? 0
+            duration: movie.runtime ?? 0,
+            description: movie.overview
           }
         })
       }

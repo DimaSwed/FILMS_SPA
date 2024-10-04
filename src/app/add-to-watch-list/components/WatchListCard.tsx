@@ -1,4 +1,4 @@
-import { Box, Card, CardMedia, Typography, Rating, Button } from '@mui/material'
+import { Box, Card, CardMedia, Typography, Rating, Button, Stack } from '@mui/material'
 import { FC } from 'react'
 import { Movie } from '@/common/types/types'
 
@@ -25,16 +25,21 @@ const MovieCard: FC<MovieCardProps> = ({ movie, onRemoveFromWatchlist }) => (
       alt={movie.title}
     />
     <Box sx={{ flex: 1, p: 2, display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="h6" sx={{ color: 'secondary.contrastText' }}>
-        {movie.title}
+      <Typography variant="h6" sx={{ color: 'secondary.contrastText', mb: '3px' }}>
+        <strong>&quot;{movie?.title}&quot;</strong>
       </Typography>
-      <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
-        Год: {movie.year}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
-        Жанр: {movie.genre ?? 'Неизвестно'}
-      </Typography>
-      <Rating value={movie.rating} readOnly />
+      <Stack gap={1}>
+        <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
+          <strong>Год:</strong> {movie.year}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
+          <strong>Жанр:</strong> {movie.genre ?? 'Неизвестно'}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'secondary.contrastText' }}>
+          <strong>Описание:</strong> {movie.description ?? 'Неизвестно'}
+        </Typography>
+        <Rating value={movie.rating} readOnly />
+      </Stack>
       <Button
         variant="contained"
         color="error"
