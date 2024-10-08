@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Movie, MoviesResponse, Genre } from '../types/types'
 import { GENRES_MAP } from '../constants/constants'
+import Cookies from 'js-cookie'
 
-// Получаем API ключ из переменных окружения
-const API = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN_AUTH as string
-const ACCOUNT_ID = process.env.NEXT_PUBLIC_TMDB_API_KEY as string
+// Получаем ACCOUNT_ID ключ из переменных окружения
+// const API = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN_AUTH as string
+const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY as string
 
 // Создаем карту жанров
 const genreMap = GENRES_MAP
@@ -15,8 +16,8 @@ export const moviesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.themoviedb.org/3',
     prepareHeaders: (headers) => {
-      if (API) {
-        headers.set('Authorization', `Bearer ${API}`)
+      if (API_KEY) {
+        headers.set('Authorization', `Bearer ${API_KEY}`)
       }
       headers.set('Content-Type', 'application/json')
       return headers
@@ -26,7 +27,13 @@ export const moviesApi = createApi({
     fetchMoviesByFilters: builder.query<Movie[], { [key: string]: any }>({
       query: (params) => ({
         url: '/discover/movie',
-        params: { ...params, language: 'ru-RU', region: 'RU', query: params.searchQuery }
+        params: {
+          ...params,
+          language: 'ru-RU',
+          region: 'RU',
+          query: params.searchQuery,
+          api_key: API_KEY
+        }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -44,7 +51,7 @@ export const moviesApi = createApi({
     fetchMovieTrailers: builder.query<any, number>({
       query: (id) => ({
         url: `/movie/${id}/videos`,
-        params: { language: 'ru-RU' }
+        params: { language: 'ru-RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) => {
         return response.results.filter((video) => video.type === 'Trailer')
@@ -54,12 +61,16 @@ export const moviesApi = createApi({
 
     addMovieToWatchlist: builder.mutation<void, { movieId: number }>({
       query: ({ movieId }) => ({
-        url: `/account/${ACCOUNT_ID}/watchlist`,
+        url: `/account/${API_KEY}/watchlist`,
         method: 'POST',
         body: {
           media_type: 'movie',
           media_id: movieId,
           watchlist: true
+        },
+        params: {
+          api_key: API_KEY,
+          session_id: Cookies.get('session_id')
         },
         headers: {
           'Content-Type': 'application/json'
@@ -93,8 +104,14 @@ export const moviesApi = createApi({
     // Эндпоинт для получения фильмов из списка
     getWatchlistMovies: builder.query<Movie[], void>({
       query: () => ({
-        url: `/account/${ACCOUNT_ID}/watchlist/movies`,
-        params: { language: 'ru-RU', page: '1', sort_by: 'created_at.asc' }
+        url: `/account/21383295/watchlist/movies`,
+        params: {
+          language: 'ru-RU',
+          // page: '999',
+          sort_by: 'created_at.asc',
+          api_key: API_KEY,
+          session_id: Cookies.get('session_id')
+        }
       }),
       transformResponse: (response: { results: any[] }) => {
         return response.results.map((movie: any) => {
@@ -120,13 +137,14 @@ export const moviesApi = createApi({
 
     removeMovieFromWatchlist: builder.mutation<void, { movieId: number }>({
       query: ({ movieId }) => ({
-        url: `/account/${ACCOUNT_ID}/watchlist`,
+        url: `/account/21383295/watchlist`,
         method: 'POST',
         body: {
           media_type: 'movie',
           media_id: movieId,
           watchlist: false
         },
+        params: { api_key: API_KEY, session_id: Cookies.get('session_id') },
         headers: {
           'Content-Type': 'application/json'
         }
@@ -151,7 +169,7 @@ export const moviesApi = createApi({
     fetchUpcomingMovies: builder.query<Movie[], void>({
       query: () => ({
         url: '/movie/upcoming',
-        params: { language: 'ru-RU', page: '1', region: 'RU' }
+        params: { language: 'ru-RU', page: '1', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -169,7 +187,7 @@ export const moviesApi = createApi({
     fetchTopRatedMovies: builder.query<Movie[], void>({
       query: () => ({
         url: '/movie/top_rated',
-        params: { language: 'ru-RU', page: '1', region: 'RU' }
+        params: { language: 'ru-RU', page: '1', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -187,7 +205,7 @@ export const moviesApi = createApi({
     fetchTrendingMovies: builder.query<Movie[], void>({
       query: () => ({
         url: '/trending/movie/week',
-        params: { language: 'ru-RU' }
+        params: { language: 'ru-RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -208,12 +226,12 @@ export const moviesApi = createApi({
     //     // params: { language: 'ru-RU', region: 'RU' }
     //     params: {
     //       external_source: 'imdb_id', // Укажите источник внешнего идентификатора (например, IMDb ID),
-    //       api_key: API
+    //       api_key: ACCOUNT_ID
     //     }
     //   }),
 
     //   transformResponse: (response: any) => {
-    //     console.log('API response:', response) // Добавьте это для проверки структуры ответа
+    //     console.log('ACCOUNT_ID response:', response) // Добавьте это для проверки структуры ответа
     //     const movie = response.movie_results ? response.movie_results[0] : null
 
     //     // Возвращаем дефолтные значения, если фильм не найден
@@ -249,11 +267,11 @@ export const moviesApi = createApi({
         url: `/movie/${id}`, // Используем правильный эндпоинт
         params: {
           language: 'ru-RU',
-          api_key: API // Добавляем API ключ
+          api_key: API_KEY // Добавляем ACCOUNT_ID ключ
         }
       }),
       transformResponse: (response: any) => {
-        console.log('API response fetchMovieById:', response) // Для проверки структуры ответа
+        console.log('ACCOUNT_ID response fetchMovieById:', response) // Для проверки структуры ответа
         return {
           id: response.id,
           title: response.title,
@@ -280,7 +298,8 @@ export const moviesApi = createApi({
             params: {
               page: randomPage,
               language: 'ru-RU',
-              region: 'RU'
+              region: 'RU',
+              api_key: API_KEY
             }
           }
 
@@ -311,7 +330,7 @@ export const moviesApi = createApi({
     fetchNowPlayingMovies: builder.query<Movie[], void>({
       query: () => ({
         url: '/movie/now_playing',
-        params: { language: 'ru-RU', page: '1', region: 'RU' }
+        params: { language: 'ru-RU', page: '1', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -336,6 +355,7 @@ export const moviesApi = createApi({
               page: 1,
               language: 'ru-RU',
               region: 'RU',
+              api_key: API_KEY,
               ...params
             } // Применяем переданные фильтры
           }
@@ -414,7 +434,8 @@ export const moviesApi = createApi({
           query,
           page: 1,
           language: 'ru-RU',
-          region: 'RU'
+          region: 'RU',
+          api_key: API_KEY
         }
       }),
       transformResponse: (response: { results: any[]; page: number; total_pages: number }) => ({
@@ -436,7 +457,7 @@ export const moviesApi = createApi({
     fetchGenres: builder.query<Genre[], void>({
       query: () => ({
         url: '/genre/movie/list',
-        params: { language: 'ru-RU', region: 'RU' }
+        params: { language: 'ru-RU', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { genres: any[] }) =>
         response.genres.map((genre: any) => ({
@@ -449,7 +470,7 @@ export const moviesApi = createApi({
     fetchPopularMovies: builder.query<Movie[], void>({
       query: () => ({
         url: '/movie/popular',
-        params: { language: 'ru-RU', page: '1', region: 'RU' }
+        params: { language: 'ru-RU', page: '1', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { results: any[] }) =>
         response.results.map((movie: any) => ({
@@ -467,11 +488,27 @@ export const moviesApi = createApi({
     fetchCountries: builder.query<string[], void>({
       query: () => ({
         url: '/configuration/countries',
-        params: { language: 'ru-RU', region: 'RU' }
+        params: { language: 'ru-RU', region: 'RU', api_key: API_KEY }
       }),
       transformResponse: (response: { countries: any[] }) =>
         response.countries.map((country: any) => country.english_name),
       keepUnusedDataFor: 86400
+    }),
+
+    createRequestToken: builder.mutation({
+      query: () => ({
+        url: '/authentication/token/new',
+        method: 'GET',
+        params: { api_key: API_KEY }
+      })
+    }),
+    createSessionId: builder.mutation({
+      query: (requestToken) => ({
+        url: '/authentication/session/new',
+        method: 'POST',
+        body: { request_token: requestToken.requestToken },
+        params: { api_key: API_KEY }
+      })
     })
   })
 })
@@ -494,5 +531,7 @@ export const {
   useAddMovieToWatchlistMutation,
   useGetWatchlistMoviesQuery,
   useRemoveMovieFromWatchlistMutation,
-  useLazySearchMoviesQuery
+  useLazySearchMoviesQuery,
+  useCreateRequestTokenMutation,
+  useCreateSessionIdMutation
 } = moviesApi

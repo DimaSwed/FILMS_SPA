@@ -30,9 +30,11 @@ const AddToWatchList: FC = () => {
   const filteredMovies = useMemo(() => {
     if (!watchlistMovies) return []
 
-    const validMovies = watchlistMovies.filter(
-      (movie) => movie.title && movie.rating > 0 && movie.year > 0
-    )
+    // const validMovies = watchlistMovies.filter(
+    //   (movie) => movie.title && movie.rating > 0 && movie.year > 0
+    // )
+
+    const validMovies = watchlistMovies.filter((movie) => movie.title && movie.year > 0)
 
     let updatedMovies = [...validMovies]
 
@@ -125,20 +127,26 @@ const AddToWatchList: FC = () => {
           onResetFilters={handleResetFilters}
         />
 
-        <LoadingOrError isLoading={isFetchingWatchlist} isError={isError} error={error} />
+        {/* <LoadingOrError isLoading={isFetchingWatchlist} isError={isError} error={error} /> */}
 
         {filteredMovies.length > 0 ? (
           <Box display="flex" flexDirection="column" gap={2}>
             {filteredMovies.map((movie) => (
               <MovieCard
-                key={movie.id}
+                key={movie.title}
                 movie={movie}
                 onRemoveFromWatchlist={handleRemoveFromWatchlist}
               />
             ))}
           </Box>
         ) : (
-          <NoMovies />
+          <Box
+            sx={{
+              mt: 5
+            }}
+          >
+            <NoMovies />
+          </Box>
         )}
       </Box>
     </>

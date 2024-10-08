@@ -22,11 +22,13 @@
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import themeAppReducer from './slices/slice-theme'
+import authReducer from './slices/slice-auth'
 import { moviesApi } from '../services/moviesApiTMDB'
 import { createWrapper } from 'next-redux-wrapper'
 
 const rootReducer = combineReducers({
   theme: themeAppReducer,
+  auth: authReducer,
   [moviesApi.reducerPath]: moviesApi.reducer
 })
 
