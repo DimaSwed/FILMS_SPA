@@ -220,6 +220,7 @@ const Header: FC = () => {
     const session_id = Cookies.get('session_id') // Читаем session_id из куки
     console.log('Session ID from cookies:', session_id) // Log the session ID
     if (session_id) {
+      dispatch(setSessionId(session_id)) // Устанавливаем sessionId в Redux
       dispatch(setAuthenticated(true)) // Устанавливаем isAuthenticated в Redux
       console.log('User authenticated from cookies:', true)
     } else {

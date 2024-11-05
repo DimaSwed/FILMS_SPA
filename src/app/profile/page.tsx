@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import { Box, Typography, Avatar, Stack, Divider } from '@mui/material'
+import { Box, Typography, Avatar, Stack, Divider, CircularProgress } from '@mui/material'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -20,7 +20,20 @@ const UserProfile: FC = () => {
     skip: !sessionId // пропускает запрос, если sessionId не определен
   })
 
-  if (isLoading) return <Typography>Loading...</Typography>
+  if (isLoading)
+    return (
+      <Typography
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'background.paper',
+          width: '100%'
+        }}
+      >
+        <CircularProgress sx={{ color: 'primary.light' }} />
+      </Typography>
+    )
   if (error) {
     const errorMessage =
       'status' in error && error.data ? error.data.toString() : 'An error occurred'
@@ -41,7 +54,7 @@ const UserProfile: FC = () => {
           width: '100%'
         }}
       >
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 4, width: '100%' }}>
           {user?.avatar?.gravatar?.hash ? (
             <Avatar
               src={`https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}`}

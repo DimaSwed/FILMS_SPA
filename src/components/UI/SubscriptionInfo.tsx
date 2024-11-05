@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import Image from 'next/image'
 import avatar from '/public/avatar.png'
 import { useGetUserDetailsQuery } from '@/common/services/moviesApiTMDB'
@@ -18,7 +18,20 @@ const SubscriptionInfo: FC = () => {
 
   console.log('user: ', user)
 
-  if (isLoading) return <Typography>Loading...</Typography>
+  if (isLoading)
+    return (
+      <Typography
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'background.paper',
+          width: '100%'
+        }}
+      >
+        <CircularProgress sx={{ color: 'primary.light', m: 2 }} />
+      </Typography>
+    )
   if (error) {
     const errorMessage =
       'status' in error && error.data ? error.data.toString() : 'An error occurred'
