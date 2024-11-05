@@ -185,7 +185,7 @@ import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import Cookies from 'js-cookie' // Импортируем js-cookie
 import { useDispatch, useSelector } from 'react-redux' // Импортируем useDispatch и useSelector
-import { setAuthenticated } from '@/common/store/slices/slice-auth'
+import { setSessionId, setAuthenticated } from '@/common/store/slices/slice-auth'
 import { RootState } from '@/common/store'
 
 const Header: FC = () => {
@@ -204,6 +204,7 @@ const Header: FC = () => {
         const { session_id } = await createSessionId({ requestToken }).unwrap()
         console.log('Session ID received:', session_id) // Логируем полученный session_id
         Cookies.set('session_id', session_id, { expires: 7 })
+        dispatch(setSessionId(session_id)) // Добавьте это для установки session_id в Redux
         dispatch(setAuthenticated(true))
         console.log('User authenticated:', true)
         router.push('/')
@@ -233,6 +234,8 @@ const Header: FC = () => {
 
     if (approved === 'true' && typeof request_token === 'string') {
       handleSessionCreation(request_token)
+    } else {
+      console.error('Request token or approval status is missing or incorrect')
     }
   }, [searchParams, handleSessionCreation, dispatch])
 
@@ -240,6 +243,10 @@ const Header: FC = () => {
   const handleLogin = async () => {
     try {
       const { request_token } = await createRequestToken({}).unwrap()
+      if (!request_token) {
+        console.error('Не удалось получить request_token')
+        return
+      }
       const currentHost = window.location.origin
       window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=${currentHost}`
     } catch (error) {

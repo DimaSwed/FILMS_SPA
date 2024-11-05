@@ -495,6 +495,14 @@ export const moviesApi = createApi({
       keepUnusedDataFor: 86400
     }),
 
+    getUserDetails: builder.query({
+      query: (sessionId: string) => ({
+        url: `/account`,
+        method: 'GET',
+        params: { api_key: API_KEY, session_id: sessionId }
+      })
+    }),
+
     createRequestToken: builder.mutation({
       query: () => ({
         url: '/authentication/token/new',
@@ -533,5 +541,6 @@ export const {
   useRemoveMovieFromWatchlistMutation,
   useLazySearchMoviesQuery,
   useCreateRequestTokenMutation,
-  useCreateSessionIdMutation
+  useCreateSessionIdMutation,
+  useGetUserDetailsQuery
 } = moviesApi
